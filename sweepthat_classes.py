@@ -22,18 +22,7 @@ class Piece:
             screen.blit(self.image, self.rect) # draw img
             pygame.draw.rect(screen, Config.COLORS["DARK_GREEN"], self.rect, 2)
 
-# class Board:
-#     def __init__(self):
-#         self.card_data = [] ################# add card data list to UML ALSO ################
-#         self.cards = []
-#         self.bg = random.choice(THAI_BG)
-#         self.board_rect = pygame.Rect(
-#             int(Config.BORDER_SIZE),
-#             int(Config.BORDER_SIZE),
-#             int(Config.WIDTH - 2 * Config.BORDER_SIZE),
-#             int(Config.HEIGHT - 2 * Config.BORDER_SIZE))
-#         self.paired = []  # Stores linking cards and sounds
-#         self.create_board()
+
 class Board:
     paired_initialized = False
     shared_paired = []
@@ -286,6 +275,24 @@ class Asset:
     # def draw_asset(self, img, duration):
     #     self.status = img
     #     self.status_start_time = pygame.time.get_ticks()
+
+class User:
+    def __init__(self) -> None:
+        self.user_score = 0
+        self.user_ui =  pygame.image.load("images/10 STATUS.svg")
+
+    def draw(self, screen):
+        # Draw the user interface
+        screen.blit(self.user_ui, (0, 0))
+
+class Opponent:
+    def __init__(self) -> None:
+        self.oppo_score = 0
+        self.oppo_ui =  pygame.image.load("images/10 STATUS.svg")
+
+    def draw(self, screen):
+        # Draw the opponent interface
+        screen.blit(self.opponent_ui, (0, 0))
 
 class PieceManager:
     def __init__(self, board=None):

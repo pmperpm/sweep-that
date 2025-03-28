@@ -1,11 +1,13 @@
-# sweepthat.py
+# sweepthat_game.py
 import pygame
 from sweepthat_config import Config
 from sweepthat_classes import *
-# from sweepthat_menu import *
+from sweepthat_menu import *
+from game_end import GameEnd
 
-class Game():
+class Game(Menu):
     def __init__(self):
+        super().__init__()
         pygame.init()
         pygame.font.init()
         # self.asset = Asset()
@@ -25,37 +27,19 @@ class Game():
         self.small_font = pygame.font.Font(Config.FONT_PATH, 30)
         self.medium_font = pygame.font.Font(Config.FONT_PATH, 50)
 
-        self.screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT))
-        pygame.display.set_caption("SWEEP THAT Game")
+        # self.screen = pygame.display.set_mode((Config.WIDTH, Config.HEIGHT))
+        # pygame.display.set_caption("SWEEP THAT Game")
         self.piece_manager = PieceManager(self.board)
         self.player_selected_card = None
         self.running = True
         self.game_message, self.oppo_score_msg = "", ""
         self.user_score_msg = ""
         self.last_click_time = pygame.time.get_ticks()  # Initialize with current time
-        self.piece_manager.sound.play_sound()
+        self.piece_manager.play_next_sound()
 
         # self.piece_manager.sound.play_sound()  # Play a sound when the game starts
 
-        # msg_text_medium = self.font.render(self.game_message_medium, True, Config.COLORS["BLACK"])
-        # msg_rect_medium = msg_text_medium.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
-        # self.screen.blit(msg_text_medium, msg_rect_medium)
 
-        # msg_time1 = self.font.render(self.game_message_medium, True, Config.COLORS["BLACK"])
-        # msg_rect_medium = msg_text_medium.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
-        # self.screen.blit(msg_text_medium, msg_rect_medium)
-
-        # msg_time2 = self.font.render(self.game_message_medium, True, Config.COLORS["BLACK"])
-        # msg_rect_medium = msg_text_medium.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
-        # self.screen.blit(msg_text_medium, msg_rect_medium)
-
-        # msg_time3 = self.font.render(self.game_message_medium, True, Config.COLORS["BLACK"])
-        # msg_rect_medium = msg_text_medium.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
-        # self.screen.blit(msg_text_medium, msg_rect_medium)
-
-        # msg_time3 = self.font.render(self.game_message_medium, True, Config.COLORS["BLACK"])
-        # msg_rect_medium = msg_text_medium.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
-        # self.screen.blit(msg_text_medium, msg_rect_medium)
 
         if self.message_end_time != 0 and pygame.time.get_ticks() > self.message_end_time:
             self.game_message = ''
@@ -65,54 +49,22 @@ class Game():
                 self.game_end()
             else:
                 self.continue_game()
+                
+    # def start_game(self):
+        
 
-    # def display_text(self, size, width, height, message):
-    #     self.font = pygame.font.Font(Config.FONT_PATH, size)
-    #     msg_text = self.font.render(message, True, Config.COLORS["BLACK"])
-    #     msg_rect = msg_text.get_rect(center=(width, height))
-    #     self.screen.blit(msg_text, msg_rect)
-
-    
     def run(self):
+
         while self.running:
             # Background color
             # self.screen.fill(Config.COLORS["LIGHT_BROWN"])
             self.board.draw(self.screen)
-            self.user.draw(self.screen)
-            # self.board.draw_card(self.screen)
-
-
-            # ################# MEMORIZING PART ##################
-
-
-            # main_text = Text(50, Config.WIDTH // 2, Config.HEIGHT // 2, "Select time you want to use to\nmemorize the card position.")
-            # _3min = Text(30, Config.WIDTH // 2 - 50, Config.HEIGHT // 2 + 40, "3 min")
-            # _5min = Text(30, Config.WIDTH // 2 - 25, Config.HEIGHT // 2 + 40, "5 min")
-            # _7min = Text(30, Config.WIDTH // 2 + 25, Config.HEIGHT // 2 + 40, "7 min")
-            # _skip = Text(30, Config.WIDTH // 2 + 50, Config.HEIGHT // 2 + 40, "SKIP")
-
-            # ### COUNTDOWN ####
-            # if self.is_counting:
-            #     elapsed_time = pygame.time.get_ticks() - self.start_time
-            #     remaining_time = max(0, self.total_time - elapsed_time)
-                
-            #     # Format display string
-            #     minutes = remaining_time // 60000
-            #     seconds = (remaining_time // 1000) % 60
-            #     time_text = f"{minutes:02d}:{seconds:02d}"
-                
-            #     # Draw countdown text
-            #     time_surface = self.medium_font.render(time_text, True, Config.COLORS["BLACK"])
-            #     text_rect = time_surface.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 - 100))
-            #     self.screen.blit(time_surface, text_rect)
-
-            # # for event in pygame.event.get()L
-            # # ################################# self.board.draw_card(self.screen)
 
             # Display game message
-            msg_text = self.font.render(self.game_message, True, Config.COLORS["BLACK"])
-            msg_rect = msg_text.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 20))
-            self.screen.blit(msg_text, msg_rect)
+            if self.game_message:
+                msg_text = self.font.render(self.game_message, True, Config.COLORS["BLACK"])
+                msg_rect = msg_text.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
+                self.screen.blit(msg_text, msg_rect)
 
             # msg_text_small = self.small_font.render(self.game_message_small, True, Config.COLORS["BLACK"])
             # msg_rect_small = msg_text_small.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 80))
@@ -134,7 +86,9 @@ class Game():
                 self.game_message_small = ''
                 self.message_end_time = 0
                 if self.user.user_score == 18 or self.oppo.oppo_score == 18:
-                    self.game_end()
+                    GameEnd(self).run()
+                    self.running = False
+                    break
                 else:
                     self.continue_game()
 
@@ -143,18 +97,22 @@ class Game():
                 if pygame.time.get_ticks() - self.last_click_time > 20000:
                     self.oppo.oppo_score += 1
                     self.oppo_score_msg = self.oppo.oppo_score
+                    self.game_message = "Opponent CORRECT !"
                     print(f'Opponent correct!  Oppo score: {self.oppo.oppo_score}')
                     # Set the card and sound
                     # clicked_card.visible = False
                     self.piece_manager.board.cards[self.piece_manager.sound.correct_index].visible = False
+                    print(f'before : {self.piece_manager.sound.correct_index}')
                     self.piece_manager.sound.correct_index = None
+                    print(f'after : {self.piece_manager.sound.correct_index}')
                     # Optionally display a message or perform other actions
-                    self.game_message = "Opponent CORRECT !"
                     self.game_message_small = "game will start again in ..."
                     self.message_end_time = pygame.time.get_ticks() + 2000 # Display message
                     self.oppo_acted = True
                     if self.user.user_score == 18 or self.oppo.oppo_score == 18:
-                        self.game_end()
+                        GameEnd(self).run()
+                        self.running = False
+                        break
                     else:
                         self.continue_game()
                     pygame.mixer.music.stop()
@@ -182,10 +140,13 @@ class Game():
                         # Compare the *card object* with the target card
                         if self.player_selected_card == self.piece_manager.sound.correct_index:
                             print(f'Correct! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
-
+                            self.user.user_score += 1
                             # Set the card and sound
                             clicked_card.visible = False
+                            print(f'before : {self.piece_manager.sound.correct_index}')
                             self.piece_manager.sound.correct_index = None
+                            print(f'after : {self.piece_manager.sound.correct_index}')
+                            print(f'all sound : {Board().shared_paired}')
                             # #remove sound
                             # sound_list = Sound.paired
                             # sound_cor_idx = Sound.correct_index
@@ -196,7 +157,6 @@ class Game():
                             self.game_message_small = 'game will start again in ...'
                             self.message_end_time = pygame.time.get_ticks() + 2000
                             pygame.mixer.music.stop()
-                            self.user.user_score += 1
                             print(f'user score : {self.user.user_score}')
                             self.user_score_msg = self.user.user_score
 
@@ -219,51 +179,13 @@ class Game():
         pygame.quit()
 
     def continue_game(self):
-        # count down
-        # countdown_images = ["images/THREE.png", "images/TWO.png", "images/ONE.png"]
-        # for img in countdown_images:
-        #     self.draw_asset(Asset(img))  # Duration for each image
-        #     pygame.display.flip()
-        #     pygame.time.delay(1000)
-
         self.player_selected_card = None
-        # self.piece_manager.reset_board()
-        # Reinitialize sound with new paired indices
-        self.piece_manager.sound = Sound(self.piece_manager.board.paired)
-        self.piece_manager.sound.play_sound()
-
-    ####### adjust more ##########
-    def game_end(self):
-        if self.user.user_score == 18:
-            self.game_message = 'YOU WIN !'
-            self.game_message_small = 'great job ! Do you want to play again ?'
-            # self.game_message_smaller = '> press R to restart the game'
-            # self.game_message_smaller_2 = '> press m to go to the menu'
-            # self.message_end_time = pygame.time.get_ticks() + 2000
-        elif self.oppo.oppo_score == 18:
-            self.game_message = 'YOU LOSE !'
-            self.game_message_small = 'better luck next time ! Do you want to play again ?'
-            # self.message_end_time = pygame.time.get_ticks() + 2000
-        # restart game or not?
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:  # Restart when 'R' is pressed
-                    self.restart_game()
+        
+        # Don't create a new Sound instance - reuse the existing one
+        # This preserves the played_sounds tracking
+        if not self.piece_manager.sound.all_sounds_played:
+            self.piece_manager.play_next_sound()
 
     def draw_asset(self, img, duration=5000):
         self.status = img
         self.status_start_time = pygame.time.get_ticks()
-
-    def restart_game(self):
-        # Reset game state
-        self.user.user_score = 0
-        self.oppo.oppo_score = 0
-        self.oppo_acted = False
-        self.player_selected_card = None
-        self.game_message, self.game_message_small = '', ''
-
-        # Recreate the board and sound
-        self.piece_manager = PieceManager()
-        self.piece_manager.sound.play_sound()
-        self.board.backgrounds()
-

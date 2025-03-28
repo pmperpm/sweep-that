@@ -36,8 +36,8 @@ class Config:
     pygame.mixer.init()
 
     # MORE IMAGE
-    asset_image_folder = os.path.join(os.path.dirname(__file__), "images")
-    asset_image_f = [f for f in os.listdir(asset_image_folder) if f.lower().endswith((".svg", ".png"))]
+    # asset_image_folder = os.path.join(os.path.dirname(__file__), "images")
+    # asset_image_f = [f for f in os.listdir(asset_image_folder) if f.lower().endswith((".svg", ".png"))]
     # asset_image_files = sorted(asset_image_f, key=lambda x: int(re.sub(r'\D', '', x)))
 
 

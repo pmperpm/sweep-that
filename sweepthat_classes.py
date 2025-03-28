@@ -1,3 +1,4 @@
+# sweepthat_classes.py
 import pygame, random, os, csv
 
 from pygame.sprite import *
@@ -37,17 +38,17 @@ class Board:
             int(Config.WIDTH - 2 * Config.BORDER_SIZE),
             int(Config.HEIGHT - 2 * Config.BORDER_SIZE),
         )
-        if not Board.paired_initialized:
-            self.initialize_pairs()
+        # if not Board.paired_initialized:
+        #     self.initialize_pairs()
         self.paired = Board.shared_paired
         self.create_board()
 
-    def initialize_pairs(self):
-        num_pairs = min(len(IMAGE_FILES), len(SOUND_FILES))
-        Board.shared_paired = list(range(num_pairs))
-        random.shuffle(Board.shared_paired)
-        Board.paired_initialized = True
-        print(f"Initialized shared paired: {Board.shared_paired}")
+    # def initialize_pairs(self):
+    #     num_pairs = min(len(IMAGE_FILES), len(SOUND_FILES))
+    #     Board.shared_paired = list(range(num_pairs))
+    #     random.shuffle(Board.shared_paired)
+    #     Board.paired_initialized = True
+    #     print(f"Initialized shared paired: {Board.shared_paired}")
 
     def backgrounds(self):
         self.bg = random.choice(THAI_BG)
@@ -183,29 +184,103 @@ class Board:
     #     for card in self.cards:
     #         card.draw(screen)
 
+# class Sound:
+#     def __init__(self, paired):
+#         self.paired = paired
+#         self.correct_index = None
+#         self.play_sound()
+
+#     def play_sound(self):
+#         if not self.paired:
+#             return
+    
+#         self.correct_index = random.randint(0, len(self.paired)-1)
+#         sound_path = os.path.join(
+#             Config.sound_folder,
+#             SOUND_FILES[self.paired[self.correct_index]]
+#         )
+#         print(f'sound correct index : {self.correct_index}')
+#         # print('SOUND')
+#         # print(f'sound file pair correct idx : {SOUND_FILES[self.paired[self.correct_index]]}')
+#         # print(f'paired : {self.paired}')
+#         # print(f'correct idx : {self.correct_index}')
+#         pygame.mixer.music.load(sound_path)
+#         pygame.mixer.music.play()
+
+#     # def play_sound(self):
+#     #     if self.correct_index is not None:
+#     #         self.current_sound = self.paired[self.correct_index]
+#     #         pygame.mixer.music.load(self.current_sound)
+#     #         pygame.mixer.music.play()
+
+# class Sound:
+#     def __init__(self, paired):
+#         self.paired = paired
+#         self.correct_index = None
+#         self.played_sounds = set()  # Track played sounds
+
+#     def play_sound(self):
+#         if not self.paired:
+#             return
+
+#         # Get indices of sounds that haven't been played yet
+#         available_indices = [
+#             i for i in range(len(self.paired)) if i not in self.played_sounds
+#         ]
+#         if not available_indices:  # If all sounds have been played
+#             print("All sounds have been played.")
+#             return
+
+#         # Select a random unplayed sound
+#         self.correct_index = random.choice(available_indices)
+#         self.played_sounds.add(self.correct_index)  # Mark as played
+
+#         sound_path = os.path.join(
+#             Config.sound_folder,
+#             SOUND_FILES[self.paired[self.correct_index]]
+#         )
+#         print(f"Playing sound at index: {self.correct_index}")
+#         pygame.mixer.music.load(sound_path)
+#         pygame.mixer.music.play()
+
 class Sound:
     def __init__(self, paired):
         self.paired = paired
         self.correct_index = None
-        self.play_sound()
+        self.played_sounds = set()  # Track played sound INDICES (from self.paired)
+        self.all_sounds_played = False
 
     def play_sound(self):
-        if not self.paired:
-            return
+        # If all sounds have been played, do nothing
+        if self.all_sounds_played:
+            print("All sounds have been played already")
+            self.correct_index = None
+            return False
 
-        self.correct_index = random.randint(0, len(self.paired)-1)
+        # Get indices of sounds that haven't been played yet
+        available_indices = [
+            i for i in range(len(self.paired)) 
+            if i not in self.played_sounds
+        ]
+
+        if not available_indices:
+            print("All sounds have been played")
+            self.all_sounds_played = True
+            self.correct_index = None
+            return False
+
+        # Select a random unplayed sound
+        self.correct_index = random.choice(available_indices)
+        self.played_sounds.add(self.correct_index)  # Mark as played
+
         sound_path = os.path.join(
             Config.sound_folder,
             SOUND_FILES[self.paired[self.correct_index]]
         )
-        print(f'sound correct index : {self.correct_index}')
-        # print('SOUND')
-        # print(f'sound file pair correct idx : {SOUND_FILES[self.paired[self.correct_index]]}')
-        # print(f'paired : {self.paired}')
-        # print(f'correct idx : {self.correct_index}')
+        print(f"Playing sound at index: {self.correct_index} (Paired index: {self.paired[self.correct_index]})")
         pygame.mixer.music.load(sound_path)
         pygame.mixer.music.play()
-
+        return True
 
 class Asset:
     def __init__(self) -> None:
@@ -279,26 +354,43 @@ class Asset:
 class User:
     def __init__(self) -> None:
         self.user_score = 0
-        self.user_ui =  pygame.image.load("images/10 STATUS.svg")
 
-    def draw(self, screen):
-        # Draw the user interface
-        screen.blit(self.user_ui, (0, 0))
+    def draw_status(self, screen, status):
+        if status == "WIN":
+            try:
+                bg = pygame.image.load("asset/WIN.png")
+            except Exception as e:
+                print(f"Error loading WIN image: {e}")
+                return
+        elif status == "LOSE":
+            try:
+                bg = pygame.image.load("asset/LOSE.png")
+            except Exception as e:
+                print(f"Error loading LOSE image: {e}")
+                return
+        
+        # Check if the background image is loaded successfully
+        if bg:
+            screen.blit(bg, (0, 0))
+    
 
 class Opponent:
     def __init__(self) -> None:
         self.oppo_score = 0
-        self.oppo_ui =  pygame.image.load("images/10 STATUS.svg")
 
     def draw(self, screen):
+        pass
         # Draw the opponent interface
-        screen.blit(self.opponent_ui, (0, 0))
 
 class PieceManager:
     def __init__(self, board=None):
         # Use an existing board if provided; otherwise, create a new one
         self.board = board if board else Board()
         self.sound = Sound(self.board.paired)
+
+    def play_next_sound(self):
+        self.sound.play_sound()  # Play the next unplayed sound
+
 
     def reset_board(self):
         # Resetting should reuse the same shared paired list

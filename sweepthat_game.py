@@ -36,8 +36,8 @@ class Game(Menu):
         self.user_score_msg = ""
         self.last_click_time = pygame.time.get_ticks()
 
-        # Memorization phase variables
-        self.mem_time = 0  # Will be set based on user choice
+        # Memorization var
+        self.mem_time = 0 # memorize time to count
         self.mem_start_t = 0
         self.in_mem_phase = False
         self.mem_complete = False
@@ -50,54 +50,52 @@ class Game(Menu):
         ]
 
     def draw_time_selection(self):
-        """Draw the memorization time selection screen"""
+        # select time
         title_text = self.medium_font.render("Select memorization time:", True, Config.COLORS["BLACK"])
         self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
 
-        # Draw time options
+        # Draw time 
         for i, option in enumerate(self.time_options):
             text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
             option["rect"] = rect  # Store rect for click detection
             
             # Draw button
-            pygame.draw.rect(self.screen, Config.COLORS["LIGHT_BROWN"], rect)
+            pygame.draw.rect(self.screen, Config.COLORS["WHITE"], rect)
             pygame.draw.rect(self.screen, Config.COLORS["DARK_GREEN"], rect, 2)
             self.screen.blit(text, (rect.centerx - text.get_width()//2, rect.centery - text.get_height()//2))
 
     def draw_countdown(self, remaining_time):
-        """Draw the countdown timer during memorization phase"""
-        minutes = remaining_time // 60000
-        seconds = (remaining_time % 60000) // 1000
-        time_text = f"{minutes:02d}:{seconds:02d}"
-        countdown_text = self.medium_font.render(time_text, True, Config.COLORS["BLACK"])
+        min = remaining_time // 60000
+        sec = (remaining_time % 60000) // 1000
+        t_text = f"{min:02d}:{sec:02d}"
+        count_text = self.medium_font.render(t_text, True, Config.COLORS["BLACK"])
         prompt_text = self.small_font.render("Memorize the card positions!", True, Config.COLORS["BLACK"])
         
-        countdown_bg = pygame.Surface((300, 100), pygame.SRCALPHA)
-        countdown_bg.fill((255, 255, 255, 128))
+        count_bg = pygame.Surface((300, 100), pygame.SRCALPHA)
+        count_bg.fill((255, 255, 255, 128))
         
-        self.screen.blit(countdown_bg, (Config.WIDTH//2 - 150, Config.HEIGHT - 120))
+        self.screen.blit(count_bg, (Config.WIDTH//2 - 150, Config.HEIGHT - 120))
         self.screen.blit(prompt_text, (Config.WIDTH//2 - prompt_text.get_width()//2, Config.HEIGHT - 110))
-        self.screen.blit(countdown_text, (Config.WIDTH//2 - countdown_text.get_width()//2, Config.HEIGHT - 80))
+        self.screen.blit(count_text, (Config.WIDTH//2 - count_text.get_width()//2, Config.HEIGHT - 80))
 
     def draw_start_prompt(self):
         prompt_text = self.medium_font.render("Memorization time complete!", True, Config.COLORS["BLACK"])
-        instruction_text = self.small_font.render("Press ENTER to start the game", True, Config.COLORS["BLACK"])
+        inst_text = self.small_font.render("Press ENTER to start the game", True, Config.COLORS["BLACK"])
         
         prompt_bg = pygame.Surface((500, 150), pygame.SRCALPHA)
         prompt_bg.fill((255, 255, 255, 180))
         
         self.screen.blit(prompt_bg, (Config.WIDTH//2 - 250, Config.HEIGHT//2 - 75))
         self.screen.blit(prompt_text, (Config.WIDTH//2 - prompt_text.get_width()//2, Config.HEIGHT//2 - 50))
-        self.screen.blit(instruction_text, (Config.WIDTH//2 - instruction_text.get_width()//2, Config.HEIGHT//2 + 10))
+        self.screen.blit(inst_text, (Config.WIDTH//2 - inst_text.get_width()//2, Config.HEIGHT//2 + 10))
 
     def run(self):
         while self.running:
-            # Clear screen
             self.screen.fill(Config.COLORS["LIGHT_BROWN"])
             self.board.draw(self.screen)
 
-            # Time selection phase
+            # Time selection
             if self.selecting_mem_time:
                 self.draw_time_selection()
             
@@ -113,11 +111,11 @@ class Game(Menu):
                     self.in_mem_phase = False
                     self.confirm = True
             
-            # Waiting for start confirmation
+            # Waiting for confirm
             elif self.confirm:
                 self.draw_start_prompt()
             
-            # Main game phase
+            # Main game 
             elif self.mem_complete:
                 if self.game_message:
                     msg_text = self.font.render(self.game_message, True, Config.COLORS["BLACK"])
@@ -199,6 +197,7 @@ class Game(Menu):
                         self.confirm = False
                         self.mem_complete = True
                         self.piece_manager.play_next_sound()
+                        self.last_click_time = pygame.time.get_ticks()
 
                 ################ CARD GAME ##############
                 elif self.mem_complete and not self.confirm:
@@ -250,6 +249,6 @@ class Game(Menu):
         self.piece_manager.sound = Sound(self.piece_manager.board.paired)
         self.piece_manager.play_next_sound()
 
-    def draw_asset(self, img, duration=5000):
-        self.status = img
-        self.status_start_time = pygame.time.get_ticks()
+    # def draw_asset(self, img, duration=5000):
+    #     self.status = img
+    #     self.status_start_time = pygame.time.get_ticks()

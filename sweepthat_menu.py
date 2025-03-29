@@ -1,6 +1,7 @@
 import pygame
 from sweepthat_config import Config
 import sweepthat_game
+import sweepthat_cardpoem
 
 class Menu:
     def __init__(self) -> None:
@@ -50,7 +51,7 @@ class Menu:
                         sweepthat_game.Game().run()
                     elif msg_cardpoem_rect.collidepoint(event.pos):
                         pygame.mixer.music.play()
-                        pass
+                        sweepthat_cardpoem.CNP().run()
                     elif msg_quit_rect.collidepoint(event.pos):
                         pygame.mixer.music.play()
                         pygame.quit()

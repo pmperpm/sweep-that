@@ -1,4 +1,3 @@
-# sweepthat_classes.py
 import pygame, random, os, csv
 
 from pygame.sprite import *
@@ -188,35 +187,6 @@ class Board:
 #     def __init__(self, paired):
 #         self.paired = paired
 #         self.correct_index = None
-#         self.play_sound()
-
-#     def play_sound(self):
-#         if not self.paired:
-#             return
-    
-#         self.correct_index = random.randint(0, len(self.paired)-1)
-#         sound_path = os.path.join(
-#             Config.sound_folder,
-#             SOUND_FILES[self.paired[self.correct_index]]
-#         )
-#         print(f'sound correct index : {self.correct_index}')
-#         # print('SOUND')
-#         # print(f'sound file pair correct idx : {SOUND_FILES[self.paired[self.correct_index]]}')
-#         # print(f'paired : {self.paired}')
-#         # print(f'correct idx : {self.correct_index}')
-#         pygame.mixer.music.load(sound_path)
-#         pygame.mixer.music.play()
-
-#     # def play_sound(self):
-#     #     if self.correct_index is not None:
-#     #         self.current_sound = self.paired[self.correct_index]
-#     #         pygame.mixer.music.load(self.current_sound)
-#     #         pygame.mixer.music.play()
-
-# class Sound:
-#     def __init__(self, paired):
-#         self.paired = paired
-#         self.correct_index = None
 #         self.played_sounds = set()  # Track played sounds
 
 #     def play_sound(self):
@@ -354,20 +324,22 @@ class Asset:
 class User:
     def __init__(self) -> None:
         self.user_score = 0
+        self.track_cor = 0
+        self.track_inc = 0
 
     def draw_status(self, screen, status):
         if status == "WIN":
-            try:
+            # try:
                 bg = pygame.image.load("asset/WIN.png")
-            except Exception as e:
-                print(f"Error loading WIN image: {e}")
-                return
+            # except Exception as e:
+            #     print(f"Error loading WIN image: {e}")
+            #     return
         elif status == "LOSE":
-            try:
+            # try:
                 bg = pygame.image.load("asset/LOSE.png")
-            except Exception as e:
-                print(f"Error loading LOSE image: {e}")
-                return
+            # except Exception as e:
+                # print(f"Error loading LOSE image: {e}")
+                # return
         
         # Check if the background image is loaded successfully
         if bg:
@@ -378,8 +350,8 @@ class Opponent:
     def __init__(self) -> None:
         self.oppo_score = 0
 
-    def draw(self, screen):
-        pass
+    # def draw(self, screen):
+    #     pass
         # Draw the opponent interface
 
 class PieceManager:

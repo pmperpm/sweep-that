@@ -5,34 +5,34 @@ import sweepthat_menu
 
 class GameEnd:
     def __init__(self, game_instance) -> None:
-        self.game = game_instance  # Use the existing game instance
+        self.game = game_instance # use same instanc
         self.menu = sweepthat_menu.Menu()
-        self.user = self.game.user  # Now references the same user object
-        self.oppo = self.game.oppo  # Now references the same oppo object
-        self.choice_font = pygame.font.Font(Config.FONT_PATH, 27)
+        self.user = self.game.user  
+        self.oppo = self.game.oppo  
+        self.choice_font = pygame.font.Font(Config.FONT_PATH, 25)
 
     def game_end(self):
-        if self.user.user_score == 18:  # Changed to 18 for consistency with your game logic
+        if self.user.user_score == 18: 
             bg = pygame.image.load("asset/WIN.png")
             self.game.screen.blit(bg, (0, 0))
-        elif self.oppo.oppo_score == 18:  # Changed to 18 for consistency with your game logic
+        elif self.oppo.oppo_score == 18: 
             bg = pygame.image.load("asset/LOSE.png")
             self.game.screen.blit(bg, (0, 0))
 
         # Render text messages
         msg_newgame = self.choice_font.render("New Game", True, Config.COLORS["BLACK"]) 
-        msg_newgame_rect = msg_newgame.get_rect(center=(Config.WIDTH // 2 - 240, Config.HEIGHT // 2 + 150))
+        msg_newgame_rect = msg_newgame.get_rect(center=(Config.WIDTH // 2 - 275, Config.HEIGHT // 2 + 150))
         self.game.screen.blit(msg_newgame, msg_newgame_rect)
         
-        msg_cnp = self.choice_font.render("Card & Poem", True, Config.COLORS["BLACK"]) 
-        msg_cnp_rect = msg_cnp.get_rect(center=(Config.WIDTH // 2 - 20, Config.HEIGHT // 2 + 150))
+        msg_cnp = self.choice_font.render("Card&Poem", True, Config.COLORS["BLACK"]) 
+        msg_cnp_rect = msg_cnp.get_rect(center=(Config.WIDTH // 2 - 10, Config.HEIGHT // 2 + 150))
         self.game.screen.blit(msg_cnp, msg_cnp_rect)
         
         msg_menu = self.choice_font.render("Menu", True, Config.COLORS["BLACK"]) 
-        msg_menu_rect = msg_menu.get_rect(center=(Config.WIDTH // 2 + 220, Config.HEIGHT // 2 + 150))
+        msg_menu_rect = msg_menu.get_rect(center=(Config.WIDTH // 2 + 250, Config.HEIGHT // 2 + 150))
         self.game.screen.blit(msg_menu, msg_menu_rect)
 
-        pygame.display.flip()  # Update the screen
+        pygame.display.flip()  
 
         # Handle mouse click events
         for event in pygame.event.get():

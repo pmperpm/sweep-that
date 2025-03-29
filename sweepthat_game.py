@@ -211,6 +211,9 @@ class Game(Menu):
                             if self.player_selected_card == self.piece_manager.sound.correct_index:
                                 print(f'Correct! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
                                 self.user.user_score += 1
+                                self.user.track_cor += 1
+                                self.user.track_incor = 0
+
                                 clicked_card.visible = False
                                 print(f'before : {self.piece_manager.sound.correct_index}')
                                 self.piece_manager.sound.correct_index = None
@@ -232,6 +235,8 @@ class Game(Menu):
                             else: # Incorrect card
                                 print(f'Incorrect! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
                                 self.game_message = 'INCORRECT !'
+                                self.user.track_cor = 0
+                                self.user.track_incor += 1
                                 self.game_message_small = 'game will start again in ...'
                                 self.message_end_time = pygame.time.get_ticks() + 2000
                                 pygame.mixer.music.stop()

@@ -1,2 +1,2 @@
 # sweep-that
-![LOGO](asset/LOGO.png)
+![LOGO](../asset/LOGO.png)

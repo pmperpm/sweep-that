@@ -1,2 +1,4 @@
 # sweep-that
-![LOGO](asset/LOGO.png)
+<p align="center">
+  <img src="asset/LOGO.png" alt="LOGO">
+</p>

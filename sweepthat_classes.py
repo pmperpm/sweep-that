@@ -1,5 +1,5 @@
 import pygame, random, os, csv
-
+from pathlib import Path
 from pygame.sprite import *
 from sweepthat_config import *
 
@@ -329,22 +329,54 @@ class User:
 
     def draw_status(self, screen, status):
         if status == "WIN":
-            # try:
-                bg = pygame.image.load("asset/WIN.png")
-            # except Exception as e:
-            #     print(f"Error loading WIN image: {e}")
-            #     return
+            bg = pygame.image.load("asset/WIN.png")
         elif status == "LOSE":
-            # try:
-                bg = pygame.image.load("asset/LOSE.png")
-            # except Exception as e:
-                # print(f"Error loading LOSE image: {e}")
-                # return
+            bg = pygame.image.load("asset/LOSE.png")
         
         # Check if the background image is loaded successfully
         if bg:
             screen.blit(bg, (0, 0))
     
+    def special_func(self):
+        """ for calculation the probability that if user will getting rahu or hands"""
+        return random.random() < 0.9
+
+class Rahu:
+    def __init__(self):
+        self.images = []
+        self.current_rahu = None
+        self.load_images()
+    
+    def load_images(self):
+        """Load all RAHU images from assets folder"""
+        rahu_folder = "asset/RAHU"
+        for img_path in Path(rahu_folder).glob("*.png"):
+            img = pygame.image.load(str(img_path))
+            self.images.append(img)
+    
+    def spawn(self):
+        """Spawn a new RAHU with given probability if condition is met"""
+        if (not self.current_rahu and self.images):
+            self.current_rahu = {
+                'image': random.choice(self.images),
+                'position': (0,0)
+            }
+            return True
+        return False
+    
+    def clear(self):
+        self.current_rahu = None
+    
+    def draw(self, screen):
+        if self.current_rahu:
+            screen.blit(
+                self.current_rahu['image'],
+                self.current_rahu['position']
+            )
+    
+    def is_active(self):
+        return self.current_rahu is not None
+
 
 class Opponent:
     def __init__(self) -> None:

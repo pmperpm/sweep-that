@@ -36,6 +36,18 @@ class Game(Menu):
         self.user_score_msg = ""
         self.last_click_time = pygame.time.get_ticks()
 
+        # select level var
+        self.selecting_level = True  # New state for level selection
+        self.level_options = [
+            {"text": "EASY", "speed": 25000, "rect": None},  #
+            {"text": "NORMAL", "speed": 20000, "rect": None},  #
+            {"text": "HARD", "speed": 10000, "rect": None}  # 
+        ]
+        self.inactivity_threshold = 20000  # 
+
+        # rahu
+        self.rahu = Rahu()
+
         # Memorization var
         self.mem_time = 0 # memorize time to count
         self.mem_start_t = 0
@@ -48,6 +60,23 @@ class Game(Menu):
             {"text": "5 minutes", "time": 5 * 60 * 1000, "rect": None},
             {"text": "SKIP", "time": 0, "rect": None}
         ]
+
+    def draw_level_selection(self):
+        title_text = self.medium_font.render("Select level:", True, Config.COLORS["BLACK"])
+        self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
+
+        # Draw level options
+        for i, option in enumerate(self.level_options):
+            text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
+            rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
+            option["rect"] = rect  # Store rect for click detection
+            self.selected_level = option["text"]
+            
+            # Draw button
+            pygame.draw.rect(self.screen, Config.COLORS["WHITE"], rect)
+            pygame.draw.rect(self.screen, Config.COLORS["DARK_GREEN"], rect, 2)
+            self.screen.blit(text, (rect.centerx - text.get_width()//2, rect.centery - text.get_height()//2))
+
 
     def draw_time_selection(self):
         # select time
@@ -95,8 +124,12 @@ class Game(Menu):
             self.screen.fill(Config.COLORS["LIGHT_BROWN"])
             self.board.draw(self.screen)
 
-            # Time selection
-            if self.selecting_mem_time:
+            # Level selection phase
+            if self.selecting_level:
+                self.draw_level_selection()
+            
+            # Time selection phase
+            elif self.selecting_mem_time:
                 self.draw_time_selection()
             
             # Memorization phase
@@ -117,6 +150,10 @@ class Game(Menu):
             
             # Main game 
             elif self.mem_complete:
+                if (hasattr(self, 'selected_level') and 
+                    self.selected_level == "HARD"):
+                    self.rahu.spawn()
+
                 if self.game_message:
                     msg_text = self.font.render(self.game_message, True, Config.COLORS["BLACK"])
                     msg_rect = msg_text.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
@@ -137,6 +174,11 @@ class Game(Menu):
                 self.oppo_score_msg = self.oppo.oppo_score
 
                 ############## GAME PART #############
+                self.rahu.draw(self.screen)
+                print(f"Selected level: {getattr(self, 'selected_level', None)}")
+                print(f"Special func result: {self.user.special_func()}")
+                print(f"RAHU active: {self.rahu.is_active()}")
+
                 if self.message_end_time != 0 and pygame.time.get_ticks() > self.message_end_time:
                     self.game_message = ''
                     self.game_message_small = ''
@@ -177,6 +219,14 @@ class Game(Menu):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+
+                # Level selection
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.selecting_level:
+                    for option in self.level_options:
+                        if option["rect"] and option["rect"].collidepoint(event.pos):
+                            self.inactivity_threshold = option["speed"]
+                            self.selecting_level = False
+                            self.selecting_mem_time = True
                 
                 # Time selection
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.selecting_mem_time:
@@ -211,8 +261,6 @@ class Game(Menu):
                             if self.player_selected_card == self.piece_manager.sound.correct_index:
                                 print(f'Correct! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
                                 self.user.user_score += 1
-                                self.user.track_cor += 1
-                                self.user.track_incor = 0
 
                                 clicked_card.visible = False
                                 print(f'before : {self.piece_manager.sound.correct_index}')
@@ -235,8 +283,6 @@ class Game(Menu):
                             else: # Incorrect card
                                 print(f'Incorrect! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
                                 self.game_message = 'INCORRECT !'
-                                self.user.track_cor = 0
-                                self.user.track_incor += 1
                                 self.game_message_small = 'game will start again in ...'
                                 self.message_end_time = pygame.time.get_ticks() + 2000
                                 pygame.mixer.music.stop()
@@ -250,6 +296,7 @@ class Game(Menu):
         pygame.quit()
 
     def continue_game(self):
+        self.rahu.clear()
         self.player_selected_card = None
         self.piece_manager.sound = Sound(self.piece_manager.board.paired)
         self.piece_manager.play_next_sound()

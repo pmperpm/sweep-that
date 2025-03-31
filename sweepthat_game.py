@@ -35,6 +35,7 @@ class Game(Menu):
         self.game_message, self.oppo_score_msg = "", ""
         self.user_score_msg = ""
         self.last_click_time = pygame.time.get_ticks()
+        # self.mem_complete = True
 
         # select level var
         self.selecting_level = True  # New state for level selection
@@ -65,18 +66,30 @@ class Game(Menu):
         title_text = self.medium_font.render("Select level:", True, Config.COLORS["BLACK"])
         self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
 
-        # Draw level options
+        # Draw level options (NO selected_level assignment here)
         for i, option in enumerate(self.level_options):
             text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
             option["rect"] = rect  # Store rect for click detection
-            self.selected_level = option["text"]
             
             # Draw button
             pygame.draw.rect(self.screen, Config.COLORS["WHITE"], rect)
             pygame.draw.rect(self.screen, Config.COLORS["DARK_GREEN"], rect, 2)
             self.screen.blit(text, (rect.centerx - text.get_width()//2, rect.centery - text.get_height()//2))
 
+    def level_selec_click(self, pos):
+        for option in self.level_options:
+            if option["rect"].collidepoint(pos):  # Check if click is inside a button
+                self.selected_level = option["text"]
+                print(f"Selected level: {self.selected_level}")  # Debug
+                return True  # Selection made
+        return False  # No selection
+    
+    def time_selec_click(self, pos):
+        for option in self.time_options:
+            if option["rect"] and option["rect"].collidepoint(pos):
+                return True
+        return False
 
     def draw_time_selection(self):
         # select time
@@ -87,8 +100,8 @@ class Game(Menu):
         for i, option in enumerate(self.time_options):
             text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
-            option["rect"] = rect  # Store rect for click detection
-            
+            option["rect"] = rect 
+
             # Draw button
             pygame.draw.rect(self.screen, Config.COLORS["WHITE"], rect)
             pygame.draw.rect(self.screen, Config.COLORS["DARK_GREEN"], rect, 2)
@@ -100,10 +113,10 @@ class Game(Menu):
         t_text = f"{min:02d}:{sec:02d}"
         count_text = self.medium_font.render(t_text, True, Config.COLORS["BLACK"])
         prompt_text = self.small_font.render("Memorize the card positions!", True, Config.COLORS["BLACK"])
-        
+
         count_bg = pygame.Surface((300, 100), pygame.SRCALPHA)
         count_bg.fill((255, 255, 255, 128))
-        
+
         self.screen.blit(count_bg, (Config.WIDTH//2 - 150, Config.HEIGHT - 120))
         self.screen.blit(prompt_text, (Config.WIDTH//2 - prompt_text.get_width()//2, Config.HEIGHT - 110))
         self.screen.blit(count_text, (Config.WIDTH//2 - count_text.get_width()//2, Config.HEIGHT - 80))
@@ -111,10 +124,10 @@ class Game(Menu):
     def draw_start_prompt(self):
         prompt_text = self.medium_font.render("Memorization time complete!", True, Config.COLORS["BLACK"])
         inst_text = self.small_font.render("Press ENTER to start the game", True, Config.COLORS["BLACK"])
-        
+
         prompt_bg = pygame.Surface((500, 150), pygame.SRCALPHA)
         prompt_bg.fill((255, 255, 255, 180))
-        
+
         self.screen.blit(prompt_bg, (Config.WIDTH//2 - 250, Config.HEIGHT//2 - 75))
         self.screen.blit(prompt_text, (Config.WIDTH//2 - prompt_text.get_width()//2, Config.HEIGHT//2 - 50))
         self.screen.blit(inst_text, (Config.WIDTH//2 - inst_text.get_width()//2, Config.HEIGHT//2 + 10))
@@ -131,23 +144,23 @@ class Game(Menu):
             # Time selection phase
             elif self.selecting_mem_time:
                 self.draw_time_selection()
-            
+
             # Memorization phase
             elif self.in_mem_phase:
                 current_time = pygame.time.get_ticks()
                 elapsed = current_time - self.mem_start_t
                 remaining = max(0, self.mem_time - elapsed)
-                
+
                 self.draw_countdown(remaining)
-                
+
                 if remaining <= 0 and not self.confirm:
                     self.in_mem_phase = False
                     self.confirm = True
-            
+
             # Waiting for confirm
             elif self.confirm:
                 self.draw_start_prompt()
-            
+
             # Main game 
             elif self.mem_complete:
                 if (hasattr(self, 'selected_level') and 
@@ -174,9 +187,10 @@ class Game(Menu):
                 self.oppo_score_msg = self.oppo.oppo_score
 
                 ############## GAME PART #############
+                self.rahu.set_level(self.selected_level)
                 self.rahu.draw(self.screen)
                 print(f"Selected level: {getattr(self, 'selected_level', None)}")
-                print(f"Special func result: {self.user.special_func()}")
+                # print(f"Special func result: {self.user.special_func()}")
                 print(f"RAHU active: {self.rahu.is_active()}")
 
                 if self.message_end_time != 0 and pygame.time.get_ticks() > self.message_end_time:
@@ -220,27 +234,28 @@ class Game(Menu):
                 if event.type == pygame.QUIT:
                     self.running = False
 
-                # Level selection
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.selecting_level:
-                    for option in self.level_options:
-                        if option["rect"] and option["rect"].collidepoint(event.pos):
-                            self.inactivity_threshold = option["speed"]
-                            self.selecting_level = False
-                            self.selecting_mem_time = True
-                
-                # Time selection
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.selecting_mem_time:
-                    for option in self.time_options:
-                        if option["rect"] and option["rect"].collidepoint(event.pos):
-                            self.mem_time = option["time"]
-                            self.selecting_mem_time = False
-                            if self.mem_time > 0:
-                                self.in_mem_phase = True
-                                self.mem_start_t = pygame.time.get_ticks()
-                            else:
-                                self.mem_complete = True
-                                self.piece_manager.play_next_sound()
-                
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.selecting_level and self.level_selec_click(event.pos):
+                        for option in self.level_options:
+                            if option["rect"] and option["rect"].collidepoint(event.pos):
+                                self.selected_level = option["text"]
+                                self.inactivity_threshold = option["speed"]  # Only for level selection
+                                self.selecting_level = False
+                                self.selecting_mem_time = True
+                                print(f"Selected level: {self.selected_level}")
+
+                    elif self.selecting_mem_time and self.time_selec_click(event.pos):
+                        for option in self.time_options:
+                            if option["rect"] and option["rect"].collidepoint(event.pos):
+                                self.mem_time = option["time"]  # Store memorization time separately
+                                self.selecting_mem_time = False
+                                if self.mem_time > 0:
+                                    self.in_mem_phase = True
+                                    self.mem_start_t = pygame.time.get_ticks()
+                                else:
+                                    self.mem_complete = True
+                                    self.piece_manager.play_next_sound()
+
                 # Start confirm
                 elif event.type == pygame.KEYDOWN and self.confirm:
                     if event.key == pygame.K_RETURN:
@@ -250,7 +265,7 @@ class Game(Menu):
                         self.last_click_time = pygame.time.get_ticks()
 
                 ################ CARD GAME ##############
-                elif self.mem_complete and not self.confirm:
+                if self.mem_complete and not self.confirm:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.player_selected_card = self.piece_manager.get_selected_piece(event.pos)
                         # self.player_selected_card = self.piece_manager.get_selected_piece(event.pos)
@@ -303,4 +318,3 @@ class Game(Menu):
 
     # def draw_asset(self, img, duration=5000):
     #     self.status = img
-    #     self.status_start_time = pygame.time.get_ticks()

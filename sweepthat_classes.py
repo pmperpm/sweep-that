@@ -2,6 +2,7 @@ import pygame, random, os, csv
 from pathlib import Path
 from pygame.sprite import *
 from sweepthat_config import *
+import sweepthat_game
 
 class Piece:
     def __init__(self, image_path, x, y, paired_index):
@@ -324,8 +325,6 @@ class Asset:
 class User:
     def __init__(self) -> None:
         self.user_score = 0
-        self.track_cor = 0
-        self.track_inc = 0
 
     def draw_status(self, screen, status):
         if status == "WIN":
@@ -336,27 +335,24 @@ class User:
         # Check if the background image is loaded successfully
         if bg:
             screen.blit(bg, (0, 0))
-    
-    def special_func(self):
-        """ for calculation the probability that if user will getting rahu or hands"""
-        return random.random() < 0.9
+
 
 class Rahu:
     def __init__(self):
-        self.images = []
+        self.images = Config.RAHU
         self.current_rahu = None
-        self.load_images()
-    
-    def load_images(self):
-        """Load all RAHU images from assets folder"""
-        rahu_folder = "asset/RAHU"
-        for img_path in Path(rahu_folder).glob("*.png"):
-            img = pygame.image.load(str(img_path))
-            self.images.append(img)
+        self.game_level = None  # Add this to store the current game level
+
+    def set_level(self, level):  # Add this method to set the game level
+        self.game_level = level
+
+    def calc_prob(self):
+        """ for calculation the probability that if user will getting rahu or hands"""
+        return random.random() < 0.4
     
     def spawn(self):
         """Spawn a new RAHU with given probability if condition is met"""
-        if (not self.current_rahu and self.images):
+        if not self.current_rahu and self.images and self.calc_prob():
             self.current_rahu = {
                 'image': random.choice(self.images),
                 'position': (0,0)
@@ -368,14 +364,17 @@ class Rahu:
         self.current_rahu = None
     
     def draw(self, screen):
-        if self.current_rahu:
+        if self.current_rahu and self.game_level == "HARD":
             screen.blit(
                 self.current_rahu['image'],
                 self.current_rahu['position']
             )
     
     def is_active(self):
-        return self.current_rahu is not None
+        return self.current_rahu is not None and self.game_level == "HARD"
+    
+class Narayana:
+    pass
 
 
 class Opponent:

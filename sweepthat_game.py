@@ -14,7 +14,8 @@ class Game(Menu):
         self.total_time = 0
         self.message_end_time = 0
         self.user = User()
-        self.oppo = Opponent()
+        self.rahu = Rahu()
+        self.oppo_score = 0
         self.oppo_acted = False
         self.count_time = 0
         self.start_time = 0
@@ -40,14 +41,11 @@ class Game(Menu):
         # select level var
         self.selecting_level = True  # New state for level selection
         self.level_options = [
-            {"text": "EASY", "speed": 25000, "rect": None},  #
+            # {"text": "EASY", "speed": 25000, "rect": None},  #
             {"text": "NORMAL", "speed": 20000, "rect": None},  #
             {"text": "HARD", "speed": 10000, "rect": None}  # 
         ]
         self.inactivity_threshold = 20000  # 
-
-        # rahu
-        self.rahu = Rahu()
 
         # Memorization var
         self.mem_time = 0 # memorize time to count
@@ -184,7 +182,7 @@ class Game(Menu):
                 msg_oppo_score = self.small_font.render(str(self.oppo_score_msg), True, Config.COLORS["WHITE"])
                 msg_rect_oppo_score = msg_oppo_score.get_rect(center=(Config.WIDTH // 2 + 50, Config.HEIGHT // 2 - 135))
                 self.screen.blit(msg_oppo_score, msg_rect_oppo_score)
-                self.oppo_score_msg = self.oppo.oppo_score
+                self.oppo_score_msg = self.oppo_score
 
                 ############## GAME PART #############
                 self.rahu.set_level(self.selected_level)
@@ -197,7 +195,7 @@ class Game(Menu):
                     self.game_message = ''
                     self.game_message_small = ''
                     self.message_end_time = 0
-                    if self.user.user_score == 18 or self.oppo.oppo_score == 18:
+                    if self.user.user_score == 18 or self.oppo_score == 18:
                         GameEnd(self).run()
                         self.running = False
                         break
@@ -207,10 +205,10 @@ class Game(Menu):
                 # Check for inactivity
                 if self.player_selected_card is None:
                     if pygame.time.get_ticks() - self.last_click_time > 20000:
-                        self.oppo.oppo_score += 1
-                        self.oppo_score_msg = self.oppo.oppo_score
+                        self.oppo_score += 1
+                        self.oppo_score_msg = self.oppo_score
                         self.game_message = "Opponent CORRECT !"
-                        print(f'Opponent correct!  Oppo score: {self.oppo.oppo_score}')
+                        print(f'Opponent correct!  Oppo score: {self.oppo_score}')
                         # Set the card and sound
                         # clicked_card.visible = False
                         self.piece_manager.board.cards[self.piece_manager.sound.correct_index].visible = False
@@ -220,7 +218,7 @@ class Game(Menu):
                         self.game_message_small = "game will start again in ..."
                         self.message_end_time = pygame.time.get_ticks() + 2000
                         self.oppo_acted = True
-                        if self.user.user_score == 18 or self.oppo.oppo_score == 18:
+                        if self.user.user_score == 18 or self.oppo_score == 18:
                             GameEnd(self).run()
                             self.running = False
                             break
@@ -315,6 +313,3 @@ class Game(Menu):
         self.player_selected_card = None
         self.piece_manager.sound = Sound(self.piece_manager.board.paired)
         self.piece_manager.play_next_sound()
-
-    # def draw_asset(self, img, duration=5000):
-    #     self.status = img

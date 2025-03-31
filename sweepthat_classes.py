@@ -347,11 +347,9 @@ class Rahu:
         self.game_level = level
 
     def calc_prob(self):
-        """ for calculation the probability that if user will getting rahu or hands"""
         return random.random() < 0.4
     
     def spawn(self):
-        """Spawn a new RAHU with given probability if condition is met"""
         if not self.current_rahu and self.images and self.calc_prob():
             self.current_rahu = {
                 'image': random.choice(self.images),
@@ -372,18 +370,6 @@ class Rahu:
     
     def is_active(self):
         return self.current_rahu is not None and self.game_level == "HARD"
-    
-class Narayana:
-    pass
-
-
-class Opponent:
-    def __init__(self) -> None:
-        self.oppo_score = 0
-
-    # def draw(self, screen):
-    #     pass
-        # Draw the opponent interface
 
 class PieceManager:
     def __init__(self, board=None):

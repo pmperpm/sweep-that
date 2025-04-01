@@ -34,20 +34,28 @@ class Config:
     sound_f = [f for f in os.listdir(sound_folder) if f.lower().endswith(".wav")]
     sound_files = sorted(sound_f, key=lambda x: int(re.sub(r'\D', '', x)))
     pygame.mixer.init()
+    
+    # PRACTICE CARD
+    card_prac_folder = os.path.join(os.path.dirname(__file__), "card_images")
+    card_prac_f = [f for f in os.listdir(card_prac_folder) if f.lower().endswith(".svg")]
+    card_prac_files = sorted(card_prac_f, key=lambda x: int(re.sub(r'\D', '', x)))
 
     # MORE IMAGE
     # asset_image_folder = os.path.join(os.path.dirname(__file__), "images")
     # asset_image_f = [f for f in os.listdir(asset_image_folder) if f.lower().endswith((".svg", ".png"))]
     # asset_image_files = sorted(asset_image_f, key=lambda x: int(re.sub(r'\D', '', x)))
-    RAHU = [pygame.image.load("asset/RAHU/15.png"),
-        pygame.image.load("asset/RAHU/16.png"),
-        pygame.image.load("asset/RAHU/17.png"),
-        pygame.image.load("asset/RAHU/18.png"),
-        pygame.image.load("asset/RAHU/19.png"),
-        pygame.image.load("asset/RAHU/20.png")]
+    
+    RAHU = [
+            {"surface": pygame.image.load("asset/RAHU/15.png"), "pos": "TOP LEFT"},
+            {"surface": pygame.image.load("asset/RAHU/16.png"), "pos": "MIDDLE LEFT"},
+            {"surface": pygame.image.load("asset/RAHU/17.png"), "pos": "BOTOM LEFT"},
+            {"surface": pygame.image.load("asset/RAHU/18.png"), "pos": "TOP RIGHT"},
+            {"surface": pygame.image.load("asset/RAHU/19.png"), "pos": "MIDDLE RIGHT"},
+            {"surface": pygame.image.load("asset/RAHU/20.png"), "pos": "BOTOM RIGHT"},
 
-
-
+        ]
+    
+    POSITION = ["Top Left", "Middle Left", "Bottom Left", "Top Right", "Middle Right", "Bottom Right"] 
 
 
 IMAGE_FILES = Config.card_image_files

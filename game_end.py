@@ -7,15 +7,15 @@ class GameEnd:
     def __init__(self, game_instance) -> None:
         self.game = game_instance # use same instanc
         self.menu = sweepthat_menu.Menu()
-        self.user = self.game.user  
-        self.oppo = self.game.oppo  
+        self.user = self.game.user
+        self.game_c = sweepthat_game.Game()
         self.choice_font = pygame.font.Font(Config.FONT_PATH, 25)
 
     def game_end(self):
         if self.user.user_score == 18: 
             bg = pygame.image.load("asset/WIN.png")
             self.game.screen.blit(bg, (0, 0))
-        elif self.oppo.oppo_score == 18: 
+        elif self.game_c.oppo_score == 18: 
             bg = pygame.image.load("asset/LOSE.png")
             self.game.screen.blit(bg, (0, 0))
 
@@ -43,7 +43,7 @@ class GameEnd:
                 if event.button == 1:
                     # start game again
                     if msg_newgame_rect.collidepoint(event.pos):
-                        self.game.run()
+                        self.game_c.run()
                     elif msg_cnp_rect.collidepoint(event.pos):
                         pass  # Handle Card & Poem button
                     elif msg_menu_rect.collidepoint(event.pos):

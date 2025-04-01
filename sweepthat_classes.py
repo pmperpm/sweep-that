@@ -78,7 +78,7 @@ class Board:
         for i in range(4):
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], 'TOP LEFT'])
                 x += Config.CARD_WIDTH + 5
         # second row
         x = left__x
@@ -86,7 +86,7 @@ class Board:
         for i in range(4,7): # 5-7
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "TOP LEFT"])
                 x += Config.CARD_WIDTH + 5
         # third row
         x = left__x
@@ -94,7 +94,7 @@ class Board:
         for i in range(7,9): # 8-9
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "MIDDLE LEFT"])
                 x += Config.CARD_WIDTH + 5
 
         # BOTTOM LEFT
@@ -103,7 +103,7 @@ class Board:
         for i in range(9,13): # 10-13
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "BOTTOM LEFT"])
                 x += Config.CARD_WIDTH + 5
         # second row
         x = left__x
@@ -111,7 +111,7 @@ class Board:
         for i in range(13,15): # 14-15
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "BOTTOM LEFT"])
                 x += Config.CARD_WIDTH + 5
         # third row
         x = left__x
@@ -119,7 +119,7 @@ class Board:
         for i in range(15,18): # 16 - 18
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "MIDDLE LEFT"])
                 x += Config.CARD_WIDTH + 5
 
         right_x = 310
@@ -131,7 +131,7 @@ class Board:
         for i in range(18,22): # 18 - 21
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "TOP RIGHT"])
                 x += Config.CARD_WIDTH + 5
         # Second row
         x = 593
@@ -139,7 +139,7 @@ class Board:
         for i in range(22,25): # 22 - 25
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "TOP RIGHT"])
                 x += Config.CARD_WIDTH + 5
         # Third row
         x = 683
@@ -147,7 +147,7 @@ class Board:
         for i in range(25,27): # 26-27
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "MIDDLE RIGHT"])
                 x += Config.CARD_WIDTH + 5
 
         # BOTTOM RIGHT
@@ -155,7 +155,7 @@ class Board:
         for i in range(27,31): # 28-31
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "BOTTOM RIGHT"])
                 x += Config.CARD_WIDTH + 5
         # second row
         x = 683
@@ -163,7 +163,7 @@ class Board:
         for i in range(31,33): # 32-33
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "BOTTOM RIGHT"])
                 x += Config.CARD_WIDTH + 5
         # third row
         x = 593
@@ -171,8 +171,10 @@ class Board:
         for i in range(33, 36): # 34-36
             if i < len(card_images):
                 self.cards.append(Piece(card_images[i], x, y, self.paired[i]))
-                self.card_data.append([card_images[i],x,y])
+                self.card_data.append([i, card_images[i], x, y, self.paired[i], "MIDDLE RIGHT"])
                 x += Config.CARD_WIDTH + 5
+
+        # print(f'card_data{self.card_data}')
 
     def draw(self, screen):
         screen.blit(self.bg, (0, 0))
@@ -220,6 +222,14 @@ class Sound:
         self.correct_index = None
         self.played_sounds = set()  # Track played sound INDICES (from self.paired)
         self.all_sounds_played = False
+
+    def remove_sound(self, index):
+        if index in self.available_sounds:
+            self.available_sounds.remove(index)
+            # Also remove its pair if needed
+            pair_index = self.get_pair_index(index)
+            if pair_index in self.available_sounds:
+                self.available_sounds.remove(pair_index)
 
     def play_sound(self):
         # If all sounds have been played, do nothing
@@ -349,14 +359,26 @@ class Rahu:
     def calc_prob(self):
         return random.random() < 0.4
     
+    def get_current_rahu(self):
+        if self.is_active():
+            return self.images
+        return None
+    
     def spawn(self):
-        if not self.current_rahu and self.images and self.calc_prob():
+        if not self.current_rahu and self.images:
+            selected = random.choice(self.images)
             self.current_rahu = {
-                'image': random.choice(self.images),
-                'position': (0,0)
+                "surface": selected["surface"],
+                "pos": selected["pos"],
+                "position": (0, 0)
             }
             return True
         return False
+
+    def get_rahu_pos(self):
+        if self.current_rahu:
+            return self.current_rahu["pos"]
+        return None
     
     def clear(self):
         self.current_rahu = None
@@ -364,7 +386,7 @@ class Rahu:
     def draw(self, screen):
         if self.current_rahu and self.game_level == "HARD":
             screen.blit(
-                self.current_rahu['image'],
+                self.current_rahu['surface'],
                 self.current_rahu['position']
             )
     

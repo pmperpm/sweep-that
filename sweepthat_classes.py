@@ -214,13 +214,16 @@ class Board:
 #         )
 #         print(f"Playing sound at index: {self.correct_index}")
 #         pygame.mixer.music.load(sound_path)
-#         pygame.mixer.music.play()
+#         pygame.mixer.music.
+# play()
+            
+            
 
 class Sound:
     def __init__(self, paired):
         self.paired = paired
         self.correct_index = None
-        self.played_sounds = set()  # Track played sound INDICES (from self.paired)
+        self.played_sounds = set()  # Track played sound indices from self.paired
         self.all_sounds_played = False
 
     def remove_sound(self, index):
@@ -232,13 +235,13 @@ class Sound:
                 self.available_sounds.remove(pair_index)
 
     def play_sound(self):
-        # If all sounds have been played, do nothing
+        # if all sound have been played
         if self.all_sounds_played:
             print("All sounds have been played already")
             self.correct_index = None
             return False
 
-        # Get indices of sounds that haven't been played yet
+        # indices that doesnt play yet
         available_indices = [
             i for i in range(len(self.paired)) 
             if i not in self.played_sounds
@@ -272,7 +275,7 @@ class Asset:
         self.medium_font = pygame.font.Font(None, 36)  # Example size
 
     def draw_countdown(self, screen, minutes):
-        """Handles minute-based countdown visualization"""
+        """minute countdown """
         # Initialize timer on first call
         if not self.is_counting and minutes > 0:
             self.total_time = minutes * 60 * 1000  # Convert minutes to milliseconds
@@ -304,34 +307,7 @@ class Asset:
             self.is_counting = False
             return True
         return False
-
-        # start_time = pygame.time.get_ticks()
-        # while self.is_draw:
-        #     self.screen.blit(img, (0,0))
-        #     time = pygame.time.get_ticks() - start_time
-        #     if time > duration:
-        #         self.is_draw = False
-
-        
-        # """Display an asset for a set duration"""
-        # self.status = img
-        # self.status_start_time = pygame.time.get_ticks()
-        # self.status_duration = duration
-
-        # # Force redraw immediately to show the asset
-        # # self.screen.fill((255, 255, 255))  # Optional: Set a background color
-        # self.board.draw(self.screen)
-        # self.piece_manager.draw_pieces(self.screen)
-        # self.screen.blit(self.status.asset_image, self.status.rect)
-        # pygame.display.flip()
-
-        # Pause the game to show the image before continuing
-        # pygame.time.delay(duration)
-
-    # def draw_asset(self, img, duration):
-    #     self.status = img
-    #     self.status_start_time = pygame.time.get_ticks()
-
+    
 class User:
     def __init__(self) -> None:
         self.user_score = 0
@@ -351,13 +327,14 @@ class Rahu:
     def __init__(self):
         self.images = Config.RAHU
         self.current_rahu = None
-        self.game_level = None  # Add this to store the current game level
+        self.game_level = None 
 
-    def set_level(self, level):  # Add this method to set the game level
+    def set_level(self, level): 
+        """ get game level""" 
         self.game_level = level
 
-    def calc_prob(self):
-        return random.random() < 0.4
+    # def calc_prob(self):
+    #     return random.random() < 0.4
     
     def get_current_rahu(self):
         if self.is_active():
@@ -365,6 +342,7 @@ class Rahu:
         return None
     
     def spawn(self):
+        """ return the rahu """
         if not self.current_rahu and self.images:
             selected = random.choice(self.images)
             self.current_rahu = {
@@ -376,11 +354,13 @@ class Rahu:
         return False
 
     def get_rahu_pos(self):
+        """ Get rahu position """
         if self.current_rahu:
             return self.current_rahu["pos"]
         return None
     
     def clear(self):
+        """ remove rahu """
         self.current_rahu = None
     
     def draw(self, screen):
@@ -391,7 +371,12 @@ class Rahu:
             )
     
     def is_active(self):
+        """ check if rahu is active """
         return self.current_rahu is not None and self.game_level == "HARD"
+    
+class Narayana:
+    def __init__(self) -> None:
+        pass
 
 class PieceManager:
     def __init__(self, board=None):

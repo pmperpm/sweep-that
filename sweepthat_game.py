@@ -73,11 +73,11 @@ class Game(Menu):
     def draw_level_selection(self):
         # get start time
         self.start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+
         title_text = self.medium_font.render("Select level:", True, Config.COLORS["BLACK"])
         self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
 
-        # Draw level options (NO selected_level assignment here)
+        # Draw level options
         for i, option in enumerate(self.level_options):
             text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)

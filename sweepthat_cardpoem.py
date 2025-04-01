@@ -4,7 +4,8 @@ import sweepthat_game
 
 class CNP:
     def __init__(self) -> None:
-        pass
+        bg = pygame.image.load("asset/cnp_bg.png")
+        # prac_card = 
 
     def run(self):
         pass

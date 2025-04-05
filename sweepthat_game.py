@@ -221,7 +221,7 @@ class Game(Menu):
                         self.oppo_score_msg = self.oppo_score
                         self.game_message = "Opponent CORRECT !"
                         # remove played sound
-                        self.piece_manager.sound.remove_sound(self.player_selected_card)
+                        # self.piece_manager.sound.remove_sound(self.player_selected_card)
                         # print(f'Opponent correct!  Oppo score: {self.oppo_score}')
                         ###### DATA PART ######
                 
@@ -253,8 +253,8 @@ class Game(Menu):
                         react_time=self.react_time,
                         cor_pos=self.cor_pos,
                         cor_idx=self.piece_manager.sound.correct_index,
-                        clicked_pos=self.card_pos,
-                        clicked_idx=self.player_selected_card,
+                        clicked_pos='N/A', # self.card_pos
+                        clicked_idx='N/A', # self.player_selected_card
                         rahu_pos=self.pos_rahu,
                         result=result
                         )
@@ -328,7 +328,7 @@ class Game(Menu):
 
                                 clicked_card.visible = False
                                 # remove correct sound
-                                self.piece_manager.sound.remove_sound(self.player_selected_card)
+                                # self.piece_manager.sound.remove_sound(self.player_selected_card)
                                 ###### DATA PART ######
                                 # time user use to click the card
                                 self.react_time = pygame.time.get_ticks() - self.start_react_time
@@ -365,14 +365,7 @@ class Game(Menu):
                                 #######################
                                 # print(f'before : {self.piece_manager.sound.correct_index}')
                                 self.piece_manager.sound.correct_index = None
-                                # print(f'after : {self.piece_manager.sound.correct_index}')
-                                # print(f'all sound : {Board().shared_paired}')
-                                # #remove sound
-                                # sound_list = Sound.paired
-                                # sound_cor_idx = Sound.correct_index
-                                # sound_list.remove(f'{sound_cor_idx}') # not working
-                                # print(f'sound list : {sound_list}')
-                                # Update message and score
+
                                 self.game_message = 'Correct !'
                                 self.game_message_small = 'game will start again in ...'
                                 self.message_end_time = pygame.time.get_ticks() + 2000
@@ -430,19 +423,18 @@ class Game(Menu):
             pygame.display.flip()
 
         pygame.quit()
-
-    # def continue_game(self):
-    #     self.rahu.clear()
-    #     self.player_selected_card = None
-    #     self.piece_manager.sound = Sound(self.piece_manager.board.paired)
-    #     self.piece_manager.play_next_sound()
-    #     self.start_react_time = pygame.time.get_ticks()
         
     def continue_game(self):
         self.rahu.clear()
-        self.player_selected_card = None
-        # Only create new Sound instance if needed
-        if not hasattr(self.piece_manager, 'sound') or self.piece_manager.sound is None:
-            self.piece_manager.sound = Sound(self.piece_manager.board.paired)
+        self.player_selected_card = None  
+
+        # # Only create new Sound instance if all sounds have been played
+        # if (not hasattr(self.piece_manager, 'sound') or 
+        #     self.piece_manager.sound.all_sounds_played):
+        #     # Reset the board to get new pairs if all sounds have been played
+        #     self.piece_manager.reset_board()
+        #     Sound.played_sounds_global.clear()  # Reset played sounds
+        #     self.piece_manager.sound = Sound(self.piece_manager.board.paired)
+        
         self.piece_manager.play_next_sound()
         self.start_react_time = pygame.time.get_ticks()

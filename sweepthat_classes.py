@@ -1,6 +1,5 @@
 import pygame, random, os, csv
 from pathlib import Path
-from pygame.sprite import *
 from sweepthat_config import *
 import sweepthat_game
 
@@ -180,71 +179,27 @@ class Board:
         screen.blit(self.bg, (0, 0))
         for card in self.cards:
             card.draw(screen)
-        # Draw all cards on top of the background
 
-    # def draw_card(self,screen):
-    #     for card in self.cards:
-    #         card.draw(screen)
 
-# class Sound:
-#     def __init__(self, paired):
-#         self.paired = paired
-#         self.correct_index = None
-#         self.played_sounds = set()  # Track played sounds
-
-#     def play_sound(self):
-#         if not self.paired:
-#             return
-
-#         # Get indices of sounds that haven't been played yet
-#         available_indices = [
-#             i for i in range(len(self.paired)) if i not in self.played_sounds
-#         ]
-#         if not available_indices:  # If all sounds have been played
-#             print("All sounds have been played.")
-#             return
-
-#         # Select a random unplayed sound
-#         self.correct_index = random.choice(available_indices)
-#         self.played_sounds.add(self.correct_index)  # Mark as played
-
-#         sound_path = os.path.join(
-#             Config.sound_folder,
-#             SOUND_FILES[self.paired[self.correct_index]]
-#         )
-#         print(f"Playing sound at index: {self.correct_index}")
-#         pygame.mixer.music.load(sound_path)
-#         pygame.mixer.music.
-# play()
-            
-            
 
 class Sound:
+    played_sounds_global = set()  # Class-level set to track all played sounds across instances
+
     def __init__(self, paired):
         self.paired = paired
         self.correct_index = None
-        self.played_sounds = set()  # Track played sound indices from self.paired
         self.all_sounds_played = False
 
-    def remove_sound(self, index):
-        if index in self.available_sounds:
-            self.available_sounds.remove(index)
-            # Also remove its pair if needed
-            pair_index = self.get_pair_index(index)
-            if pair_index in self.available_sounds:
-                self.available_sounds.remove(pair_index)
-
     def play_sound(self):
-        # if all sound have been played
         if self.all_sounds_played:
             print("All sounds have been played already")
             self.correct_index = None
             return False
 
-        # indices that doesnt play yet
+        # Get available indices that haven't been played globally
         available_indices = [
             i for i in range(len(self.paired)) 
-            if i not in self.played_sounds
+            if self.paired[i] not in Sound.played_sounds_global
         ]
 
         if not available_indices:
@@ -255,7 +210,7 @@ class Sound:
 
         # Select a random unplayed sound
         self.correct_index = random.choice(available_indices)
-        self.played_sounds.add(self.correct_index)  # Mark as played
+        Sound.played_sounds_global.add(self.paired[self.correct_index])  # Mark as played globally
 
         sound_path = os.path.join(
             Config.sound_folder,
@@ -264,7 +219,46 @@ class Sound:
         print(f"Playing sound at index: {self.correct_index} (Paired index: {self.paired[self.correct_index]})")
         pygame.mixer.music.load(sound_path)
         pygame.mixer.music.play()
-        return True
+        return True          
+
+# class Sound:
+#     def __init__(self, paired):
+#         self.paired = paired
+#         self.correct_index = None
+#         self.played_sounds = set()  # Track played sound indices from self.paired
+#         self.all_sounds_played = False
+
+#     def play_sound(self):
+#         # if all sound have been played
+#         if self.all_sounds_played:
+#             print("All sounds have been played already")
+#             self.correct_index = None
+#             return False
+
+#         # indices that doesnt play yet
+#         available_indices = [
+#             i for i in range(len(self.paired)) 
+#             if i not in self.played_sounds
+#         ]
+
+#         if not available_indices:
+#             print("All sounds have been played")
+#             self.all_sounds_played = True
+#             self.correct_index = None
+#             return False
+
+#         # Select a random unplayed sound
+#         self.correct_index = random.choice(available_indices)
+#         self.played_sounds.add(self.correct_index)  # Mark as played
+
+#         sound_path = os.path.join(
+#             Config.sound_folder,
+#             SOUND_FILES[self.paired[self.correct_index]]
+#         )
+#         print(f"Playing sound at index: {self.correct_index} (Paired index: {self.paired[self.correct_index]})")
+#         pygame.mixer.music.load(sound_path)
+#         pygame.mixer.music.play()
+#         return True
 
 class Asset:
     def __init__(self) -> None:
@@ -385,8 +379,7 @@ class PieceManager:
         self.sound = Sound(self.board.paired)
 
     def play_next_sound(self):
-        self.sound.play_sound()  # Play the next unplayed sound
-
+        self.sound.play_sound()  # Play next unplayed sound
 
     def reset_board(self):
         # Resetting should reuse the same shared paired list

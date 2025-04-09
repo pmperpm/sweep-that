@@ -7,7 +7,7 @@ class Piece:
     def __init__(self, image_path, x, y, paired_index):
         # Image
         self.image = pygame.image.load(os.path.join(Config.card_image_folder,image_path))#Load Image
-        self.image = pygame.transform.scale(self.image, (Config.CARD_WIDTH, Config.CARD_HEIGHT))
+        # self.image = pygame.transform.scale(self.image, (Config.CARD_WIDTH, Config.CARD_HEIGHT))
 
         self.original_image = self.image
         self.rect = self.image.get_rect(topleft=(x, y))

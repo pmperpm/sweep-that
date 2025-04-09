@@ -6,9 +6,10 @@ import sweepthat_cardpoem
 class Menu:
     def __init__(self) -> None:
         pygame.font.init()
-        self.menu_bg = pygame.image.load("backgrounds/menu.gif")
+        self.menu_bg = pygame.image.load("backgrounds/menubg.png")
         self.play_msg = "PLAY"
         self.cardpoem_msg = "CARD & POEM"
+        self.stats_msg = "STATS"
         self.quit_msg = "QUIT"
         self.small_font = pygame.font.Font(Config.FONT_PATH, 30)
         self.selected_option = 0
@@ -24,22 +25,26 @@ class Menu:
         self.screen.blit(self.menu_bg, (0, 0))
 
         msg_play = self.small_font.render(self.play_msg, True, Config.COLORS["BLACK"])
-        msg_play_rect = msg_play.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 58))
+        msg_play_rect = msg_play.get_rect(center=(Config.WIDTH // 2 + 177, Config.HEIGHT // 2 - 190))
         self.screen.blit(msg_play, msg_play_rect)
 
         msg_cardpoem = self.small_font.render(self.cardpoem_msg, True, Config.COLORS["BLACK"]) 
-        msg_cardpoem_rect = msg_cardpoem.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 160))
+        msg_cardpoem_rect = msg_cardpoem.get_rect(center=(Config.WIDTH // 2 + 177, Config.HEIGHT // 2 - 55))
         self.screen.blit(msg_cardpoem, msg_cardpoem_rect)
 
+        msg_stats = self.small_font.render(self.stats_msg, True, Config.COLORS["BLACK"])
+        msg_stats_rect = msg_stats.get_rect(center=(Config.WIDTH // 2 + 177, Config.HEIGHT // 2 + 85))
+        self.screen.blit(msg_stats, msg_stats_rect)
+
         msg_quit = self.small_font.render(self.quit_msg, True, Config.COLORS["BLACK"])
-        msg_quit_rect = msg_quit.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 260))
+        msg_quit_rect = msg_quit.get_rect(center=(Config.WIDTH // 2 + 177, Config.HEIGHT // 2 + 220))
         self.screen.blit(msg_quit, msg_quit_rect)
 
         pygame.display.flip()
-        return msg_play_rect, msg_cardpoem_rect, msg_quit_rect
+        return msg_play_rect, msg_cardpoem_rect, msg_quit_rect, msg_stats_rect
 
 
-    def event(self, msg_play_rect, msg_cardpoem_rect, msg_quit_rect):
+    def event(self, msg_play_rect, msg_cardpoem_rect, msg_quit_rect, msg_stats_rect):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -51,7 +56,10 @@ class Menu:
                         sweepthat_game.Game().run()
                     elif msg_cardpoem_rect.collidepoint(event.pos):
                         pygame.mixer.music.play()
-                        sweepthat_cardpoem.CNP().run()
+                        sweepthat_cardpoem.CNP(self.screen).run()
+                    elif msg_stats_rect.collidepoint(event.pos):
+                        pygame.mixer.music.play()
+                        pass
                     elif msg_quit_rect.collidepoint(event.pos):
                         pygame.mixer.music.play()
                         pygame.quit()
@@ -59,5 +67,5 @@ class Menu:
 
     def run(self):
         while self.running:
-            msg_play_rect, msg_cardpoem_rect, msg_quit_rect = self.draw()
-            self.event(msg_play_rect, msg_cardpoem_rect, msg_quit_rect)
+            msg_play_rect, msg_cardpoem_rect, msg_quit_rect, msg_stats_rect = self.draw()
+            self.event(msg_play_rect, msg_cardpoem_rect, msg_quit_rect, msg_stats_rect)

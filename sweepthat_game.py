@@ -18,9 +18,9 @@ class Game(Menu):
         self.start_datetime = "" 
         self.react_time = 0
         self.start_react_time = 0
-        self.card_pos = ""
-        self.cor_pos = ""
-        self.pos_rahu = ""
+        self.card_pos = "N/A"
+        self.cor_pos = "N/A"
+        self.pos_rahu = "N/A"
 
         self.message_end_time = 0
         self.user = User()

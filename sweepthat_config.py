@@ -13,6 +13,7 @@ class Config:
         "WHITE": (255, 255, 255),  # Card background
         "BLACK": (0, 0, 0),        # Text color
         # "BLUE": (173, 216, 230),   # Board background (light blue)
+        "DARK_BLUE": (0,0,139),
         "DARK_GREEN": (0, 100, 0), # Card border
         "LIGHT_BROWN": (222, 184, 135) # Outer frame
     }
@@ -36,9 +37,10 @@ class Config:
     pygame.mixer.init()
     
     # PRACTICE CARD
-    card_prac_folder = os.path.join(os.path.dirname(__file__), "card_images")
-    card_prac_f = [f for f in os.listdir(card_prac_folder) if f.lower().endswith(".svg")]
+    card_prac_folder = os.path.join(os.path.dirname(__file__), "cardpoem")
+    card_prac_f = [f for f in os.listdir(card_prac_folder) if f.lower().endswith(".png")]
     card_prac_files = sorted(card_prac_f, key=lambda x: int(re.sub(r'\D', '', x)))
+
 
     # MORE IMAGE
     # asset_image_folder = os.path.join(os.path.dirname(__file__), "images")
@@ -61,21 +63,13 @@ class Config:
 IMAGE_FILES = Config.card_image_files
 SOUND_FILES = Config.sound_files
 
-# CORRECT_IMG = pygame.image.load("images/CORRECT.png")
-# INCORRECT_IMG = pygame.image.load("images/INCORRECT.png")
-# OPPOCORRECT_IMG = pygame.image.load("images/OPPOCORRECT.png")
-# LOSE_IMG = pygame.image.load("images/LOSE.png")
-# ONW_IMG = pygame.image.load("images/ONE.png")
-# TWO_IMG = pygame.image.load("images/TWO.png")
-# THREE_IMG = pygame.image.load("images/THREE.png")
-# WIN_IMG = pygame.image.load("images/WIN.png")
-
 THAI_BG = [pygame.image.load("backgrounds/1 BG.png"),
            pygame.image.load("backgrounds/2 BG.png"),
            pygame.image.load("backgrounds/3 BG.png"),
            pygame.image.load("backgrounds/4 BG.png"),
            pygame.image.load("backgrounds/5 BG.png")]
-# print(THAI_BG) -> <Surface(900x700x32 SW)>
+
+
 """
     CARDS
         -1. พระอภัยมณี

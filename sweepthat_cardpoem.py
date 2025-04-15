@@ -159,7 +159,7 @@ class CNP:
                 result = self.handle_event(event)
                 if result == "menu":
                     self.stop_current_sound()
-                    return "menu"
+                    self.menu.run()
             
             self.screen.fill((255, 255, 255))
             self.draw()

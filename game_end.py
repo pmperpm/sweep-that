@@ -2,6 +2,7 @@ import pygame
 import sweepthat_game
 from sweepthat_config import Config
 import sweepthat_menu
+import sweepthat_cardpoem 
 
 class GameEnd:
     def __init__(self, game_instance) -> None:
@@ -9,6 +10,7 @@ class GameEnd:
         self.menu = sweepthat_menu.Menu()
         self.user = self.game.user
         self.game_c = sweepthat_game.Game()
+        self.cardpoem = sweepthat_cardpoem.CNP(pygame.display.set_mode((Config.WIDTH, Config.HEIGHT)))
         self.choice_font = pygame.font.Font(Config.FONT_PATH, 25)
 
     def game_end(self):
@@ -45,7 +47,7 @@ class GameEnd:
                     if msg_newgame_rect.collidepoint(event.pos):
                         self.game_c.run()
                     elif msg_cnp_rect.collidepoint(event.pos):
-                        pass  # Handle Card & Poem button
+                        self.cardpoem.run()
                     elif msg_menu_rect.collidepoint(event.pos):
                         self.menu.run()
 

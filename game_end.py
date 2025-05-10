@@ -17,7 +17,7 @@ class GameEnd:
         if self.__user.score == 18: 
             bg = pygame.image.load("asset/WIN.png")
             self.__game.screen.blit(bg, (0, 0))
-        elif self.__game_c.oppo_score == 18: 
+        elif self.__game.oppo_score == 18: 
             bg = pygame.image.load("asset/LOSE.png")
             self.__game.screen.blit(bg, (0, 0))
 

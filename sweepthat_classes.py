@@ -404,9 +404,10 @@ class PieceManager:
         self.__board.draw(screen)
 
     def get_selected_piece(self, pos):
+        """Returns index of clicked card if visible, None otherwise"""
         for i, card in enumerate(self.__board.cards):
             if card.rect.collidepoint(pos):
-                return i  # Return the index of the clicked card
+                return i if card.visible else None
         return None
 
     @property

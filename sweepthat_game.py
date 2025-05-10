@@ -1,4 +1,3 @@
-# sweepthat_game.py
 import pygame
 from sweepthat_config import Config
 from sweepthat_classes import *
@@ -15,71 +14,95 @@ class Game(Menu):
         # self.asset = Asset()
 
         # attribute to store in database
-        self.start_datetime = "" 
-        self.react_time = 0
-        self.start_react_time = 0
-        self.card_pos = "N/A"
-        self.cor_pos = "N/A"
-        self.pos_rahu = "N/A"
+        self.__start_datetime = "" 
+        self.__react_time = 0
+        self.__start_react_time = 0
+        self.__card_pos = "N/A"
+        self.__cor_pos = "N/A"
+        self.__pos_rahu = "N/A"
 
-        self.message_end_time = 0
-        self.user = User()
-        self.rahu = Rahu()
-        self.db = DB()
-        self.oppo_score = 0
-        self.oppo_acted = False
-        self.count_time = 0
-        self.start_time = 0
-        self.MUSIC_END = pygame.USEREVENT + 1
-        self.board = Board()
-        self.is_counting = False
-        pygame.mixer.music.set_endevent(self.MUSIC_END)
+        self.__message_end_time = 0
+        self.__user = User()
+        self.__rahu = Rahu()
+        self.__db = DB()
+        self.__oppo_score = 0
+        self.__oppo_acted = False
+        self.__count_time = 0
+        self.__start_time = 0
+        self.__MUSIC_END = pygame.USEREVENT + 1
+        self.__board = Board()
+        self.__is_counting = False
+        pygame.mixer.music.set_endevent(self.__MUSIC_END)
 
-        self.font = pygame.font.Font(Config.FONT_PATH, 70)
-        self.small_font = pygame.font.Font(Config.FONT_PATH, 30)
-        self.medium_font = pygame.font.Font(Config.FONT_PATH, 50)
+        self.__font = pygame.font.Font(Config.FONT_PATH, 70)
+        self.__small_font = pygame.font.Font(Config.FONT_PATH, 30)
+        self.__medium_font = pygame.font.Font(Config.FONT_PATH, 50)
 
         # pygame.display.set_caption("SWEEP THAT Game")
-        self.piece_manager = PieceManager(self.board)
-        self.player_selected_card = None
-        self.running = True
-        self.game_message, self.oppo_score_msg = "", ""
-        self.user_score_msg = ""
-        self.last_click_time = pygame.time.get_ticks()
-        # self.mem_complete = True
+        self.__piece_manager = PieceManager(self.board)
+        self.__player_selected_card = None
+        self.__running = True
+        self.__game_message, self.__oppo_score_msg = "", ""
+        self.__user_score_msg = ""
+        self.__last_click_time = pygame.time.get_ticks()
 
         # select level var
-        self.selecting_level = True  # level selection
-        self.level_options = [
+        self.__selecting_level = True  # level selection
+        self.__level_options = [
             # {"text": "EASY", "speed": 25000, "rect": None},  #
             {"text": "NORMAL", "speed": 20000, "rect": None},  #
             {"text": "HARD", "speed": 10000, "rect": None}  # 
         ]
-        self.inactivity_threshold = 20000  # 
+        self.__inactivity_threshold = 20000  # 
 
         # Memorization var
-        self.mem_time = 0 # memorize time to count
-        self.mem_start_t = 0
-        self.in_mem_phase = False
-        self.mem_complete = False
-        self.confirm = False
-        self.selecting_mem_time = True  # New state for time selection
-        self.time_options = [
+        self.__mem_time = 0 # memorize time to count
+        self.__mem_start_t = 0
+        self.__in_mem_phase = False
+        self.__mem_complete = False
+        self.__confirm = False
+        self.__selecting_mem_time = True  # New state for time selection
+        self.__time_options = [
             {"text": "3 minutes", "time": 3 * 60 * 1000, "rect": None},
             {"text": "5 minutes", "time": 5 * 60 * 1000, "rect": None},
             {"text": "SKIP", "time": 0, "rect": None}
         ]
 
+    @property
+    def user(self):
+        return self.__user
+    
+    @property
+    def rahu(self):
+        return self.__rahu
+    
+    @property
+    def board(self):
+        return self.__board
+    
+    @property
+    def piece_manager(self):
+        return self.__piece_manager
+    
+    @property
+    def mem_complete(self):
+        return self.__mem_complete
+    
+    @mem_complete.setter
+    def mem_complete(self, value):
+        self.__mem_complete = value
+
+
     def draw_level_selection(self):
         # get start time
-        self.start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.__start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        title_text = self.medium_font.render("Select level:", True, Config.COLORS["BLACK"])
+        title_text = self.__medium_font.render("Select level:", True, Config.COLORS["BLACK"])
         self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
 
         # Draw level options
-        for i, option in enumerate(self.level_options):
-            text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
+        for i, option in enumerate(self.__level_options):
+            text = self.__small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
             option["rect"] = rect  # Store rect for click detection
             
@@ -89,26 +112,26 @@ class Game(Menu):
             self.screen.blit(text, (rect.centerx - text.get_width()//2, rect.centery - text.get_height()//2))
 
     def level_selec_click(self, pos):
-        for option in self.level_options:
-            if option["rect"].collidepoint(pos):  # Check if click is inside a button
-                self.selected_level = option["text"]
+        for option in self.__level_options:
+            if option["rect"].collidepoint(pos):  # if click is inside a button
+                self.__selected_level = option["text"]
                 return True 
         return False 
     
     def time_selec_click(self, pos):
-        for option in self.time_options:
+        for option in self.__time_options:
             if option["rect"] and option["rect"].collidepoint(pos):
                 return True
         return False
 
     def draw_time_selection(self):
         # select time
-        title_text = self.medium_font.render("Select memorization time:", True, Config.COLORS["BLACK"])
+        title_text = self.__medium_font.render("Select memorization time:", True, Config.COLORS["BLACK"])
         self.screen.blit(title_text, (Config.WIDTH//2 - title_text.get_width()//2, Config.HEIGHT//2 - 100))
 
         # Draw time 
-        for i, option in enumerate(self.time_options):
-            text = self.small_font.render(option["text"], True, Config.COLORS["BLACK"])
+        for i, option in enumerate(self.__time_options):
+            text = self.__small_font.render(option["text"], True, Config.COLORS["BLACK"])
             rect = pygame.Rect(Config.WIDTH//2 - 100, Config.HEIGHT//2 + i*60, 200, 50)
             option["rect"] = rect 
 
@@ -121,8 +144,8 @@ class Game(Menu):
         min = remaining_time // 60000
         sec = (remaining_time % 60000) // 1000
         t_text = f"{min:02d}:{sec:02d}"
-        count_text = self.medium_font.render(t_text, True, Config.COLORS["BLACK"])
-        prompt_text = self.small_font.render("Memorize the card positions!", True, Config.COLORS["BLACK"])
+        count_text = self.__medium_font.render(t_text, True, Config.COLORS["BLACK"])
+        prompt_text = self.__small_font.render("Memorize the card positions!", True, Config.COLORS["BLACK"])
 
         count_bg = pygame.Surface((300, 100), pygame.SRCALPHA)
         count_bg.fill((255, 255, 255, 128))
@@ -132,8 +155,8 @@ class Game(Menu):
         self.screen.blit(count_text, (Config.WIDTH//2 - count_text.get_width()//2, Config.HEIGHT - 80))
 
     def draw_start_prompt(self):
-        prompt_text = self.medium_font.render("Memorization time complete!", True, Config.COLORS["BLACK"])
-        inst_text = self.small_font.render("Press ENTER to start the game", True, Config.COLORS["BLACK"])
+        prompt_text = self.__medium_font.render("Memorization time complete!", True, Config.COLORS["BLACK"])
+        inst_text = self.__small_font.render("Press ENTER to start the game", True, Config.COLORS["BLACK"])
 
         prompt_bg = pygame.Surface((500, 150), pygame.SRCALPHA)
         prompt_bg.fill((255, 255, 255, 180))
@@ -143,277 +166,300 @@ class Game(Menu):
         self.screen.blit(inst_text, (Config.WIDTH//2 - inst_text.get_width()//2, Config.HEIGHT//2 + 10))
 
     def run(self):
-        while self.running:
+        while self.__running:
             self.screen.fill(Config.COLORS["LIGHT_BROWN"])
-            self.board.draw(self.screen)
+            self.__board.draw(self.screen)
 
             # Level selection phase
-            if self.selecting_level:
+            if self.__selecting_level:
                 self.draw_level_selection()
             
             # Time selection phase
-            elif self.selecting_mem_time:
+            elif self.__selecting_mem_time:
                 self.draw_time_selection()
 
             # Memorization phase
-            elif self.in_mem_phase:
+            elif self.__in_mem_phase:
                 current_time = pygame.time.get_ticks()
-                elapsed = current_time - self.mem_start_t
-                remaining = max(0, self.mem_time - elapsed)
+                elapsed = current_time - self.__mem_start_t
+                remaining = max(0, self.__mem_time - elapsed)
 
                 self.draw_countdown(remaining)
 
-                if remaining <= 0 and not self.confirm:
-                    self.in_mem_phase = False
-                    self.confirm = True
+                if remaining <= 0 and not self.__confirm:
+                    self.__in_mem_phase = False
+                    self.__confirm = True
 
             # Waiting for confirm
-            elif self.confirm:
+            elif self.__confirm:
                 self.draw_start_prompt()
 
             # Main game 
-            elif self.mem_complete:
-                if (hasattr(self, 'selected_level') and 
-                    self.selected_level == "HARD"):
-                    self.rahu.spawn()
+            elif self.__mem_complete:
+                if hasattr(self, '_Game__selected_level') and self.__selected_level == "HARD":
+                    if not self.__rahu.is_active():  # Only spawn if not already active
+                        self.__rahu.spawn()
 
-                if self.game_message:
-                    msg_text = self.font.render(self.game_message, True, Config.COLORS["BLACK"])
+                if self.__game_message:
+                    msg_text = self.__font.render(self.__game_message, True, Config.COLORS["BLACK"])
                     msg_rect = msg_text.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2))
                     self.screen.blit(msg_text, msg_rect)
 
-                # msg_text_small = self.small_font.render(self.game_message_small, True, Config.COLORS["BLACK"])
-                # msg_rect_small = msg_text_small.get_rect(center=(Config.WIDTH // 2, Config.HEIGHT // 2 + 80))
-                # self.screen.blit(msg_text_small, msg_rect_small)
-
-                msg_user_score = self.small_font.render(str(self.user_score_msg), True, Config.COLORS["WHITE"])
+                msg_user_score = self.__small_font.render(str(self.__user_score_msg), True, Config.COLORS["WHITE"])
                 msg_rect_user_score = msg_user_score.get_rect(center=(Config.WIDTH // 2 + 50, Config.HEIGHT // 2 + 120))
                 self.screen.blit(msg_user_score, msg_rect_user_score)
-                self.user_score_msg = self.user.user_score
+                self.__user_score_msg = self.__user.score
 
-                msg_oppo_score = self.small_font.render(str(self.oppo_score_msg), True, Config.COLORS["WHITE"])
+                msg_oppo_score = self.__small_font.render(str(self.__oppo_score_msg), True, Config.COLORS["WHITE"])
                 msg_rect_oppo_score = msg_oppo_score.get_rect(center=(Config.WIDTH // 2 + 50, Config.HEIGHT // 2 - 135))
                 self.screen.blit(msg_oppo_score, msg_rect_oppo_score)
-                self.oppo_score_msg = self.oppo_score
+                self.__oppo_score_msg = self.__oppo_score
 
                 ############## GAME PART #############
-                self.rahu.set_level(self.selected_level)
-                self.rahu.draw(self.screen)
-                # print(f"Selected level: {getattr(self, 'selected_level', None)}")
-                # print(f"Special func result: {self.user.special_func()}")
-                # print(f"RAHU active: {self.rahu.is_active()}")
+                self.__rahu.set_level(self.__selected_level)
+                self.__rahu.draw(self.screen)
 
-                if self.message_end_time != 0 and pygame.time.get_ticks() > self.message_end_time:
-                    self.game_message = ''
-                    self.game_message_small = ''
-                    self.message_end_time = 0
-                    if self.user.user_score == 18 or self.oppo_score == 18:
+                if self.__message_end_time != 0 and pygame.time.get_ticks() > self.__message_end_time:
+                    self.__game_message = ''
+                    self.__game_message_small = ''
+                    self.__message_end_time = 0
+                    if self.user.score == 18 or self.__oppo_score == 18:
                         GameEnd(self).run()
-                        self.running = False
+                        self.__running = False
                         break
                     else:
                         self.continue_game()
 
                 # Check for inactivity
-                if self.player_selected_card is None:
-                    if pygame.time.get_ticks() - self.last_click_time > 20000:
-                        self.oppo_score += 1
-                        self.oppo_score_msg = self.oppo_score
-                        self.game_message = "Opponent CORRECT !"
-                        # remove played sound
-                        # self.piece_manager.sound.remove_sound(self.player_selected_card)
-                        # print(f'Opponent correct!  Oppo score: {self.oppo_score}')
+                if self.__player_selected_card is None:
+                    if pygame.time.get_ticks() - self.__last_click_time > 20000:
+                        self.__oppo_score += 1
+                        self.__oppo_score_msg = self.__oppo_score
+                        self.__game_message = "Opponent CORRECT !"
                         ###### DATA PART ######
                 
                         # time user use to click the card
-                        self.react_time = 0
+                        self.__react_time = 0
                         # rahu position 
-                        if self.selected_level == "HARD": # Hard levek
-                            self.pos_rahu = self.rahu.get_rahu_pos()
+                        if self.__selected_level == "HARD": # Hard levek
+                            self.__pos_rahu = self.__rahu.get_rahu_pos()
                         else: # Normal level
-                            self.pos_rahu = None
+                            self.__pos_rahu = None
                         # card position
-                        clicked_index = self.player_selected_card  # Already stored when clicking
-                        if clicked_index is not None and clicked_index < len(self.board.card_data):
-                            self.card_pos = self.board.card_data[clicked_index][5]
+                        clicked_index = self.__player_selected_card  # Already stored when clicking
+                        if clicked_index is not None and clicked_index < len(self.__board.card_data):
+                            self.__card_pos = self.__board.card_data[clicked_index][5]
                         else:
-                            self.card_pos = None
+                            self.__card_pos = None
                                 # correct position
-                        self.cor_pos = self.board.card_data[self.piece_manager.sound.correct_index][5]
+                        self.__cor_pos = self.__board.card_data[self.__piece_manager.sound.correct_index][5]
+                        # correct index
+                        for card in current_cards:
+                            if self.__piece_manager.sound.correct_index == card['index']:
+                                correct_index_data = card['image_name'].split('.')[0] 
+                                correct_pos = card['position']
                         # result
                         result = "OPPO CORRECT"
                         print(f'DATA RESULT\n'
-                              f'react_time: {self.react_time}\n'
-                              f'rahu_position: {self.pos_rahu}\n'
-                              f'card pos : {self.card_pos}\n'
-                              f'correct index : {self.piece_manager.sound.correct_index}\n'
+                              f'react_time: {self.__react_time}\n'
+                              f'rahu_position: {self.__pos_rahu}\n'
+                              f'card pos : {correct_pos}\n'
+                              f'correct index : {correct_index_data}\n'
                               f'result: {result}')
                         # ADD DATA #
-                        self.db.add_to_csv(date_start=self.start_datetime,
-                        react_time=self.react_time,
-                        cor_pos=self.cor_pos,
-                        cor_idx=self.piece_manager.sound.correct_index,
+                        self.__db.add_to_csv(date_start=self.__start_datetime,
+                        react_time=self.__react_time,
+                        cor_pos=self.__cor_pos,
+                        cor_idx=correct_index_data,
                         clicked_pos='N/A', # self.card_pos
-                        clicked_idx='N/A', # self.player_selected_card
-                        rahu_pos=self.pos_rahu,
+                        clicked_idx=0, # self.player_selected_card
+                        rahu_pos=self.__pos_rahu,
                         result=result
                         )
                         #######################
 
                         # Set the card and sound
-                        # clicked_card.visible = False
-                        self.piece_manager.board.cards[self.piece_manager.sound.correct_index].visible = False
+                        self.__piece_manager.board.cards[self.__piece_manager.sound.correct_index].visible = False
                         # print(f'before : {self.piece_manager.sound.correct_index}')
-                        self.piece_manager.sound.correct_index = None
+                        self.__piece_manager.sound.correct_index = None
                         # print(f'after : {self.piece_manager.sound.correct_index}')
-                        self.game_message_small = "game will start again in ..."
-                        self.message_end_time = pygame.time.get_ticks() + 2000
-                        self.oppo_acted = True
-                        if self.user.user_score == 18 or self.oppo_score == 18:
+                        self.__game_message_small = "game will start again in ..."
+                        self.__message_end_time = pygame.time.get_ticks() + 2000
+                        self.__oppo_acted = True
+                        if self.__user.score == 18 or self.__oppo_score == 18:
                             GameEnd(self).run()
-                            self.running = False
+                            self.__running = False
                             break
                         else:
                             self.continue_game()
                         pygame.mixer.music.stop()
-                        self.last_click_time = pygame.time.get_ticks()
+                        self.__last_click_time = pygame.time.get_ticks()
 
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.running = False
+                    self.__running = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.selecting_level and self.level_selec_click(event.pos):
-                        for option in self.level_options:
+
+                    current_cards = self.board.get_card_images_info()
+                    for card in current_cards:
+                        print(f"Card at index {card['index']}: {card['image_name']} at {card['position']}")
+
+                    if self.__selecting_level and self.level_selec_click(event.pos):
+                        for option in self.__level_options:
                             if option["rect"] and option["rect"].collidepoint(event.pos):
-                                self.selected_level = option["text"]
-                                self.inactivity_threshold = option["speed"]  # Only for level selection
-                                self.selecting_level = False
-                                self.selecting_mem_time = True
+                                self.__selected_level = option["text"]
+                                self.__inactivity_threshold = option["speed"]  # Only for level selection
+                                self.__selecting_level = False
+                                self.__selecting_mem_time = True
                                 # print(f"Selected level: {self.selected_level}")
 
-                    elif self.selecting_mem_time and self.time_selec_click(event.pos):
-                        for option in self.time_options:
+                    elif self.__selecting_mem_time and self.time_selec_click(event.pos):
+                        for option in self.__time_options:
                             if option["rect"] and option["rect"].collidepoint(event.pos):
-                                self.mem_time = option["time"]  # Store memorization time separately
-                                self.selecting_mem_time = False
-                                if self.mem_time > 0:
-                                    self.in_mem_phase = True
-                                    self.mem_start_t = pygame.time.get_ticks()
+                                self.__mem_time = option["time"]  # Store memorization time separately
+                                self.__selecting_mem_time = False
+                                if self.__mem_time > 0:
+                                    self.__in_mem_phase = True
+                                    self.__mem_start_t = pygame.time.get_ticks()
                                 else:
-                                    self.mem_complete = True
-                                    self.piece_manager.play_next_sound()
+                                    self.__mem_complete = True
+                                    self.__piece_manager.play_next_sound()
 
                 # Start confirm
-                elif event.type == pygame.KEYDOWN and self.confirm:
+                elif event.type == pygame.KEYDOWN and self.__confirm:
                     if event.key == pygame.K_RETURN:
-                        self.confirm = False
-                        self.mem_complete = True
-                        self.piece_manager.play_next_sound()
-                        self.last_click_time = pygame.time.get_ticks()
+                        self.__confirm = False
+                        self.__mem_complete = True
+                        self.__piece_manager.play_next_sound()
+                        self.__last_click_time = pygame.time.get_ticks()
 
                 ################ CARD GAME ##############
-                if self.mem_complete and not self.confirm:
+                if self.__mem_complete and not self.__confirm:
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        self.player_selected_card = self.piece_manager.get_selected_piece(event.pos)
+                        self.__player_selected_card = self.__piece_manager.get_selected_piece(event.pos)
                         # self.player_selected_card = self.piece_manager.get_selected_piece(event.pos)
-                        if self.player_selected_card is not None:
-                            self.last_click_time = pygame.time.get_ticks()
-                            clicked_card = self.piece_manager.board.cards[self.player_selected_card]
+                        if self.__player_selected_card is not None:
+                            self.__last_click_time = pygame.time.get_ticks()
+                            clicked_card = self.__piece_manager.board.cards[self.__player_selected_card]
 
-                            if self.player_selected_card == self.piece_manager.sound.correct_index:
+                            if self.__player_selected_card == self.__piece_manager.sound.correct_index:
                                 # print(f'Correct! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
-                                self.user.user_score += 1
+                                self.__user.score += 1
 
                                 clicked_card.visible = False
                                 # remove correct sound
                                 # self.piece_manager.sound.remove_sound(self.player_selected_card)
+
+
                                 ###### DATA PART ######
                                 # time user use to click the card
-                                self.react_time = pygame.time.get_ticks() - self.start_react_time
+                                self.__react_time = pygame.time.get_ticks() - self.__start_react_time
                                 # rahu position 
-                                if self.selected_level == "HARD": # Hard levek
-                                    self.pos_rahu = self.rahu.get_rahu_pos()
-                                    print(f'rahu position: {self.pos_rahu}')
+                                if self.__selected_level == "HARD": # Hard levek
+                                    self.__pos_rahu = self.__rahu.get_rahu_pos()
+                                    print(f'rahu position: {self.__pos_rahu}')
                                 else: # Normal level
-                                    self.pos_rahu = None
+                                    self.__pos_rahu = None
                                 # clicked position
-                                clicked_index = self.player_selected_card  # Already stored when clicking
-                                if clicked_index is not None and clicked_index < len(self.board.card_data):
-                                    self.card_pos = self.board.card_data[clicked_index][5]
+                                clicked_index = self.__player_selected_card  # Already stored when clicking
+                                if clicked_index is not None and clicked_index < len(self.__board.card_data):
+                                    self.__card_pos = self.__board.card_data[clicked_index][5]
                                 # correct position
-                                self.cor_pos = self.board.card_data[self.piece_manager.sound.correct_index][5]
+                                self.__cor_pos = self.__board.card_data[self.__piece_manager.sound.correct_index][5]
                                 # result
                                 result = "CORRECT"
+                                #clicked index + correct index
+                                for card in current_cards:
+                                    if self.__player_selected_card == card['index']:
+                                        clicked_index_data = card['image_name'].split('.')[0]
+                                        clicked_pos = card['position']
+                                    if self.__piece_manager.sound.correct_index == card['index']:
+                                        correct_index_data = card['image_name'].split('.')[0] 
+                                        correct_pos = card['position']
+
+                                    # print(f"Card at index {card['index']}: {card['image_name']} at {card['position']}")
                                 print(f'DATA RESULT\n'
-                                    f'react_time: {self.react_time}\n'
-                                    f'rahu_position: {self.pos_rahu}\n'
-                                    f'card pos : {self.card_pos}\n'
-                                    f'correct index : {self.piece_manager.sound.correct_index}\n'
+                                    f'react_time: {self.__react_time}\n'
+                                    f'rahu_position: {self.__pos_rahu}\n'
+                                    f'clicked index : {clicked_index_data}'
+                                    f'clicked pos : {clicked_pos}\n'
+                                    f'correct index : {correct_index_data}\n'
+                                    f'cor pos: {correct_pos}'
                                     f'result: {result}')
                                 # ADD DATA #
-                                self.db.add_to_csv(date_start=self.start_datetime,
-                                react_time=self.react_time,
-                                cor_pos=self.cor_pos,
-                                cor_idx=self.piece_manager.sound.correct_index,
-                                clicked_pos=self.card_pos,
-                                clicked_idx=self.player_selected_card,
-                                rahu_pos=self.pos_rahu,
+                                self.__db.add_to_csv(date_start=self.__start_datetime,
+                                react_time=self.__react_time,
+                                cor_pos=self.__cor_pos,
+                                cor_idx=correct_index_data,
+                                clicked_pos=self.__card_pos,
+                                clicked_idx=int(clicked_index_data),
+                                rahu_pos=self.__pos_rahu,
                                 result=result
                                 )
                                 #######################
                                 # print(f'before : {self.piece_manager.sound.correct_index}')
-                                self.piece_manager.sound.correct_index = None
+                                self.__piece_manager.sound.correct_index = None
 
-                                self.game_message = 'Correct !'
-                                self.game_message_small = 'game will start again in ...'
-                                self.message_end_time = pygame.time.get_ticks() + 2000
+                                self.__game_message = 'Correct !'
+                                self.__game_message_small = 'game will start again in ...'
+                                self.__message_end_time = pygame.time.get_ticks() + 2000
                                 pygame.mixer.music.stop()
                                 # print(f'user score : {self.user.user_score}')
-                                self.user_score_msg = self.user.user_score
-                                self.player_selected_card = None
+                                self.__user_score_msg = self.__user.score
+                                self.__player_selected_card = None
                             else: # Incorrect card
-                                print(f'Incorrect! Clicked index: {self.player_selected_card}, Correct index: {self.piece_manager.sound.correct_index}')
+                                print(f'Incorrect! Clicked index: {self.__player_selected_card}, Correct index: {self.__piece_manager.sound.correct_index}')
 
                                 ###### DATA PART ######
                                 # time user use to click the card
-                                self.react_time = pygame.time.get_ticks() - self.start_react_time
+                                self.__react_time = pygame.time.get_ticks() - self.__start_react_time
                                 # rahu position 
-                                if self.selected_level == "HARD": # Hard levek
-                                    self.pos_rahu = self.rahu.get_rahu_pos()
-                                    print(f'rahu position: {self.pos_rahu}')
+                                if self.__selected_level == "HARD": # Hard levek
+                                    self.__pos_rahu = self.__rahu.get_rahu_pos()
+                                    print(f'rahu position: {self.__pos_rahu}')
                                 else: # Normal level
-                                    self.pos_rahu = None
+                                    self.__pos_rahu = None
                                 # card position
-                                clicked_index = self.player_selected_card  # Already stored when clicking
-                                if clicked_index is not None and clicked_index < len(self.board.card_data):
-                                    self.card_pos = self.board.card_data[clicked_index][5]
+                                clicked_index = self.__player_selected_card  # Already stored when clicking
+                                if clicked_index is not None and clicked_index < len(self.__board.card_data):
+                                    self.__card_pos = self.__board.card_data[clicked_index][5]
                                 # correct position
-                                self.cor_pos = self.board.card_data[self.piece_manager.sound.correct_index][5]
+                                self.__cor_pos = self.__board.card_data[self.__piece_manager.sound.correct_index][5]
+                                for card in current_cards:
+                                    if self.__player_selected_card == card['index']:
+                                        clicked_index_data = card['image_name'].split('.')[0]
+                                        clicked_pos = card['position']
+                                    if self.__piece_manager.sound.correct_index == card['index']:
+                                        correct_index_data = card['image_name'].split('.')[0] 
+                                        correct_pos = card['position']
+
                                 # result
                                 result = "INCORRECT"
                                 print(f'DATA RESULT\n'
-                                        f'react_time: {self.react_time}\n'
-                                        f'rahu_position: {self.pos_rahu}\n'
-                                        f'card pos : {self.card_pos}\n'
-                                        f'correct index : {self.piece_manager.sound.correct_index}\n'
+                                        f'react_time: {self.__react_time}\n'
+                                        f'rahu_position: {self.__pos_rahu}\n'
+                                        f'clicked index : {clicked_index_data}'
+                                        f'clicked pos : {clicked_pos}\n'
+                                        f'correct index : {correct_index_data}\n'
+                                        f'cor pos: {correct_pos}'
                                         f'result: {result}')
                                 # ADD DATA #
-                                self.db.add_to_csv(date_start=self.start_datetime,
-                                react_time=self.react_time,
-                                cor_pos=self.cor_pos,
-                                cor_idx=self.piece_manager.sound.correct_index,
-                                clicked_pos=self.card_pos,
-                                clicked_idx=self.player_selected_card,
-                                rahu_pos=self.pos_rahu,
+                                self.__db.add_to_csv(date_start=self.__start_datetime,
+                                react_time=self.__react_time,
+                                cor_pos=self.__cor_pos,
+                                cor_idx=correct_index_data,
+                                clicked_pos=self.__card_pos,
+                                clicked_idx=clicked_index_data,
+                                rahu_pos=self.__pos_rahu,
                                 result=result
                                 )
                                 #######################
                                         
-                                self.game_message = 'INCORRECT !'
-                                self.game_message_small = 'game will start again in ...'
-                                self.message_end_time = pygame.time.get_ticks() + 2000
+                                self.__game_message = 'INCORRECT !'
+                                self.__game_message_small = 'game will start again in ...'
+                                self.__message_end_time = pygame.time.get_ticks() + 2000
                                 pygame.mixer.music.stop()
 
                     elif event.type == pygame.KEYDOWN:
@@ -425,16 +471,8 @@ class Game(Menu):
         pygame.quit()
         
     def continue_game(self):
-        self.rahu.clear()
-        self.player_selected_card = None  
-
-        # # Only create new Sound instance if all sounds have been played
-        # if (not hasattr(self.piece_manager, 'sound') or 
-        #     self.piece_manager.sound.all_sounds_played):
-        #     # Reset the board to get new pairs if all sounds have been played
-        #     self.piece_manager.reset_board()
-        #     Sound.played_sounds_global.clear()  # Reset played sounds
-        #     self.piece_manager.sound = Sound(self.piece_manager.board.paired)
+        self.__rahu.clear()
+        self.__player_selected_card = None  
         
-        self.piece_manager.play_next_sound()
-        self.start_react_time = pygame.time.get_ticks()
+        self.__piece_manager.play_next_sound()
+        self.__start_react_time = pygame.time.get_ticks()

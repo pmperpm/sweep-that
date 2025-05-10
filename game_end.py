@@ -6,33 +6,33 @@ import sweepthat_cardpoem
 
 class GameEnd:
     def __init__(self, game_instance) -> None:
-        self.game = game_instance # use same instanc
-        self.menu = sweepthat_menu.Menu()
-        self.user = self.game.user
-        self.game_c = sweepthat_game.Game()
-        self.cardpoem = sweepthat_cardpoem.CNP(pygame.display.set_mode((Config.WIDTH, Config.HEIGHT)))
-        self.choice_font = pygame.font.Font(Config.FONT_PATH, 25)
+        self.__game = game_instance # use same instanc
+        self.__menu = sweepthat_menu.Menu()
+        self.__user = self.__game.user
+        self.__game_c = sweepthat_game.Game()
+        self.__cardpoem = sweepthat_cardpoem.CNP(pygame.display.set_mode((Config.WIDTH, Config.HEIGHT)))
+        self.__choice_font = pygame.font.Font(Config.FONT_PATH, 25)
 
     def game_end(self):
-        if self.user.user_score == 18: 
+        if self.__user.score == 18: 
             bg = pygame.image.load("asset/WIN.png")
-            self.game.screen.blit(bg, (0, 0))
-        elif self.game_c.oppo_score == 18: 
+            self.__game.screen.blit(bg, (0, 0))
+        elif self.__game_c.oppo_score == 18: 
             bg = pygame.image.load("asset/LOSE.png")
-            self.game.screen.blit(bg, (0, 0))
+            self.__game.screen.blit(bg, (0, 0))
 
         # Render text messages
-        msg_newgame = self.choice_font.render("New Game", True, Config.COLORS["BLACK"]) 
+        msg_newgame = self.__choice_font.render("New Game", True, Config.COLORS["BLACK"]) 
         msg_newgame_rect = msg_newgame.get_rect(center=(Config.WIDTH // 2 - 275, Config.HEIGHT // 2 + 150))
-        self.game.screen.blit(msg_newgame, msg_newgame_rect)
+        self.__game.screen.blit(msg_newgame, msg_newgame_rect)
         
-        msg_cnp = self.choice_font.render("Card&Poem", True, Config.COLORS["BLACK"]) 
+        msg_cnp = self.__choice_font.render("Card&Poem", True, Config.COLORS["BLACK"]) 
         msg_cnp_rect = msg_cnp.get_rect(center=(Config.WIDTH // 2 - 10, Config.HEIGHT // 2 + 150))
-        self.game.screen.blit(msg_cnp, msg_cnp_rect)
+        self.__game.screen.blit(msg_cnp, msg_cnp_rect)
         
-        msg_menu = self.choice_font.render("Menu", True, Config.COLORS["BLACK"]) 
+        msg_menu = self.__choice_font.render("Menu", True, Config.COLORS["BLACK"]) 
         msg_menu_rect = msg_menu.get_rect(center=(Config.WIDTH // 2 + 250, Config.HEIGHT // 2 + 150))
-        self.game.screen.blit(msg_menu, msg_menu_rect)
+        self.__game.screen.blit(msg_menu, msg_menu_rect)
 
         pygame.display.flip()  
 
@@ -45,11 +45,11 @@ class GameEnd:
                 if event.button == 1:
                     # start game again
                     if msg_newgame_rect.collidepoint(event.pos):
-                        self.game_c.run()
+                        self.__game_c.run()
                     elif msg_cnp_rect.collidepoint(event.pos):
-                        self.cardpoem.run()
+                        self.__cardpoem.run()
                     elif msg_menu_rect.collidepoint(event.pos):
-                        self.menu.run()
+                        self.__menu.run()
 
     def run(self):
         while True:

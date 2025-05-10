@@ -2,20 +2,19 @@ import pygame
 import os, re
 
 class Config:
-    # Screen dimensions based on the 1.8m x 1.2m ratio shown in image
-    WIDTH, HEIGHT = 900, 700  # 3:2 ratio matching the image dimensions
+    WIDTH, HEIGHT = 900, 700 
 
     # Card dimensions
     CARD_WIDTH, CARD_HEIGHT = 85, 95
 
-    # Colors matching the image
+    # Colors
     COLORS = {
-        "WHITE": (255, 255, 255),  # Card background
-        "BLACK": (0, 0, 0),        # Text color
-        # "BLUE": (173, 216, 230),   # Board background (light blue)
+        "WHITE": (255, 255, 255), 
+        "BLACK": (0, 0, 0),   
+        # "BLUE": (173, 216, 230),  
         "DARK_BLUE": (0,0,139),
-        "DARK_GREEN": (0, 100, 0), # Card border
-        "LIGHT_BROWN": (222, 184, 135) # Outer frame
+        "DARK_GREEN": (0, 100, 0), 
+        "LIGHT_BROWN": (222, 184, 135) 
     }
 
     # Border
@@ -41,11 +40,6 @@ class Config:
     card_prac_f = [f for f in os.listdir(card_prac_folder) if f.lower().endswith(".png")]
     card_prac_files = sorted(card_prac_f, key=lambda x: int(re.sub(r'\D', '', x)))
 
-
-    # MORE IMAGE
-    # asset_image_folder = os.path.join(os.path.dirname(__file__), "images")
-    # asset_image_f = [f for f in os.listdir(asset_image_folder) if f.lower().endswith((".svg", ".png"))]
-    # asset_image_files = sorted(asset_image_f, key=lambda x: int(re.sub(r'\D', '', x)))
     
     RAHU = [
             {"surface": pygame.image.load("asset/RAHU/15.png"), "pos": "TOP LEFT"},
@@ -56,6 +50,7 @@ class Config:
             {"surface": pygame.image.load("asset/RAHU/20.png"), "pos": "BOTOM RIGHT"},
 
         ]
+    
     
     POSITION = ["Top Left", "Middle Left", "Bottom Left", "Top Right", "Middle Right", "Bottom Right"] 
 

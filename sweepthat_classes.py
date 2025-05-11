@@ -14,7 +14,7 @@ class Piece:
         self.__visible = True
         self.__paired_index = paired_index
 
-        self.__image = self._scale_image(self.__original_image, Config.CARD_WIDTH, Config.CARD_HEIGHT)
+        self.__image = self._scale_to_fill(self.__original_image, Config.CARD_WIDTH, Config.CARD_HEIGHT)
         
         self.__original_image = self.__original_image
         self.__rect = self.__image.get_rect(topleft=(x, y))

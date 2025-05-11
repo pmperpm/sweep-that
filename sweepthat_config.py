@@ -25,7 +25,7 @@ class Config:
 
     # IMAGES LIST FOR CARD
     card_image_folder = os.path.join(os.path.dirname(__file__), "card_images")
-    card_image_f = [f for f in os.listdir(card_image_folder) if f.lower().endswith(".svg")]
+    card_image_f = [f for f in os.listdir(card_image_folder) if f.lower().endswith(".png")]
     card_image_files = sorted(card_image_f, key=lambda x: int(re.sub(r'\D', '', x)))
 
 

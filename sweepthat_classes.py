@@ -38,25 +38,32 @@ class Piece:
     def visible(self, value):
         self.__visible = value
 
-    def _scale_image(self, image, target_width, target_height):
+    def _scale_to_fill(self, image, target_width, target_height):
+        """Scale image to fill target dimensions, cropping if necessary"""
+        # Get original dimensions
         original_width, original_height = image.get_size()
         
+        # Calculate scaling factors
         width_ratio = target_width / original_width
         height_ratio = target_height / original_height
         
-        scale_ratio = min(width_ratio, height_ratio)
+        # Use the larger ratio to ensure the image fills the space
+        scale_ratio = max(width_ratio, height_ratio)
         
+        # Calculate new dimensions
         new_width = int(original_width * scale_ratio)
         new_height = int(original_height * scale_ratio)
         
+        # Scale the image
         scaled_image = pygame.transform.scale(image, (new_width, new_height))
         
-        final_image = pygame.Surface((target_width, target_height), pygame.SRCALPHA)
+        # Calculate cropping area (centered)
+        crop_x = (new_width - target_width) // 2
+        crop_y = (new_height - target_height) // 2
         
-        x_offset = (target_width - new_width) // 2
-        y_offset = (target_height - new_height) // 2
-        
-        final_image.blit(scaled_image, (x_offset, y_offset))
+        # Create a subsurface that fits exactly in our card dimensions
+        final_image = scaled_image.subsurface(
+            pygame.Rect(crop_x, crop_y, target_width, target_height))
         
         return final_image
 

@@ -9,7 +9,7 @@ sweep that! Karuta Thai style that will make you have fun with thai poem eventho
 - **Pygame** (version 2.x)
 - **Pandas** (version2.1.4)
 - **Matplotlib** (version3.8.2)
-- **tk** (version 0.1.0)
+- **tk** (version 0.1.0)<br>
 note : all of the required libraries and tools will be in requirements.txt to install
 
 ## Installation

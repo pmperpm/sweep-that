@@ -14,6 +14,14 @@ class Piece:
         self.__visible = True
         self.__paired_index = paired_index
 
+        self.__image = self._scale_image(self.__original_image, Config.CARD_WIDTH, Config.CARD_HEIGHT)
+        
+        self.__original_image = self.__original_image
+        self.__rect = self.__image.get_rect(topleft=(x, y))
+        self.__font = pygame.font.Font(None, 16)
+        self.__visible = True
+        self.__paired_index = paired_index
+
     @property
     def rect(self):
         return self.__rect
@@ -29,6 +37,28 @@ class Piece:
     @visible.setter
     def visible(self, value):
         self.__visible = value
+
+    def _scale_image(self, image, target_width, target_height):
+        original_width, original_height = image.get_size()
+        
+        width_ratio = target_width / original_width
+        height_ratio = target_height / original_height
+        
+        scale_ratio = min(width_ratio, height_ratio)
+        
+        new_width = int(original_width * scale_ratio)
+        new_height = int(original_height * scale_ratio)
+        
+        scaled_image = pygame.transform.scale(image, (new_width, new_height))
+        
+        final_image = pygame.Surface((target_width, target_height), pygame.SRCALPHA)
+        
+        x_offset = (target_width - new_width) // 2
+        y_offset = (target_height - new_height) // 2
+        
+        final_image.blit(scaled_image, (x_offset, y_offset))
+        
+        return final_image
 
     def draw(self, screen):
         if self.__visible:

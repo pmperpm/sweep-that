@@ -32,7 +32,35 @@
     </p>
 
 
-4. Algorithms Involved
+4.  Object-Oriented Programming Implementation
+
+| File | Class | Description |
+|------|-------|-------------|
+| **sweepthat_classes.py** | | |
+| | `Board` | this class will be used to create the board of the game and place the cards and return the card info for data collection. |
+| | `Sound` | Manages all poem audio files and sound playback |
+| | `Piece` | this class store all card information and draw the cards on the board. |
+| | `User` | Tracks and displays player score (18 to 0) |
+| | `Rahu` | Manages Hard Mode (position tracking, spawning, rendering) |
+| | `PieceManager` | this class is responsible for managing the card and board, resetting the board for new games, playing the next sound and returning the index of the correct card. |
+| **sweepthat_config.py** | | |
+| | `Config` | Config class will store all basic game data such as size of the board, size of the card or the card’s thai poem to use in Card class.(board/card sizes, poem references, etc.) |
+| **sweepthat_game.py** | | |
+| | `Game` | Main game controller with core loop and state management along with a lot of helper functions such as draw_countdown that will draw the memorized time that user selects, draw_level_selection that will draw the level for the user to select. |
+| **game_end.py** | | |
+| | `GameEnd` | Handles win/lose screens and post-game options (restart, menu, card & poem) |
+| **sweepthat_menu.py** | | |
+| | `Menu` | Main menu system with navigation (Play, Card & Poem, Stats, Quit) |
+| **sweepthat_cardpoem.py** | | |
+| | `CNP` | Manages the Card & Poem practice mode (card browsing, audio playback) |
+| **sweepthat_stats.py** | | |
+| | `Stats` | Tkinter-based analytics dashboard (Table, graphs: histograms, heatmaps, pie charts) |
+| **sweepthat_db.py** | | |
+| | `DB` | Handles all data operations (CSV logging, retrieval for stats) |
+
+For all of the images and sound, it will be stored in 1. Card images folder 2. Sound folder 3.backgrounds 4.asset
+
+5. Algorithms Involved
 
 
     Rule-based Logic : This game uses a rule-based logic algorithm based on traditional Karuta game’s logic.
@@ -40,7 +68,7 @@
 
 
 **Statistical Data (Prop Stats)**
-5. Data Features
+6. Data Features
 
 In the ‘database.csv’ csv file, we will track 5 features.
 Date - start time
@@ -54,13 +82,13 @@ Date - start time
 
 From the above, the data that we have tracked will be calculated into the user analysis to make the user improve themselves ex.If the position of the card often on the top right, means that the user needs to pay attention on the other side of the board more, or if the position of rahu is the same as position of the correct card and the result of user is correct means that user is can really remember the position of the card.
 
-6. Data Recording Method
+7. Data Recording Method
 
 All the game’s statistical data will be stored in a CSV file with date and start time, which can be used to calculate the average time that user clicks the card in each round.
 
 
 
-7. Data Analysis Report
+8. Data Analysis Report
 Statistical Measures
 Mean and Median: Calculate the average time to sweep cards and total time per round to understand typical player behavior.
 Frequency Distribution: Analyze how often each poem is quickly or slowly clicked to identify patterns in player knowledge.
@@ -74,7 +102,7 @@ Table : Show the position of RAHU vs the position of the correct card and succes
 Line graph : Compare the average time that the user sweeps in each round.
 Pie chart : Position of the correct card that users often overlook.
 
-8. 
+9. 
 | Graph Name | Feature Name | Description | Graph Type | X-axis | Y-axis |
 |------------|--------------|-------------|------------|--------|--------|
 Frequency of correct result in hard mode compare to normal mode | rahu_pos, result | Comparison of success rates between modes. | Histogram | Rahu_pos (hard mode and normal mode) | Frequency | 
@@ -85,7 +113,7 @@ All the sweep times. | date_start time, react_time | To see the average times th
 Card that user doesn’t click correctly | Cor_idx, click_idx | To see how much that user clicks the specific card incorrectly. | Histogram | cor_idx | Frequency | 
 ---
 
-9. 
+10. 
 ---
 | Feature Name | What can this data be used for? Why is it good to have this data? | How will you obtain 50 values of this feature data? | Which variable and which class will you collect this from? | How will you display this feature data (via summarization statistics or via graph)? |
 |--------------|---------|-------------------|-----------------------|----------------------|
@@ -100,6 +128,6 @@ Position of Rahu | To know the position that the user can’t see, to check if t
 Result | To know if the user clicks the card correctly or not. | By playing the game until the data is enough to calculate. | Collect from ‘result’ | This data feature will help the other data to display such as pie chart of the incorrect position. The data will need to filter out the correct position since we only want the incorrect one. This is where result data will be used | 
 ---
 
-10. Document version
+11. Document version
 Version: 5.0 (final version)
 Date: 11 May 2025

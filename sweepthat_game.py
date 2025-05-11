@@ -25,7 +25,7 @@ class Game(Menu):
         self.__user = User()
         self.__rahu = Rahu()
         self.__db = DB()
-        self.__oppo_score = 17
+        self.__oppo_score = 0
         self.__oppo_acted = False
         self.__count_time = 0
         self.__start_time = 0
@@ -143,9 +143,9 @@ class Game(Menu):
             pygame.draw.rect(self.screen, Config.COLORS["DARK_GREEN"], rect, 2)
             self.screen.blit(text, (rect.centerx - text.get_width()//2, rect.centery - text.get_height()//2))
 
-    def draw_countdown(self, remaining_time):
-        min = remaining_time // 60000
-        sec = (remaining_time % 60000) // 1000
+    def draw_countdown(self, remain_t):
+        min = remain_t // 60000
+        sec = (remain_t % 60000) // 1000
         t_text = f"{min:02d}:{sec:02d}"
         count_text = self.__medium_font.render(t_text, True, Config.COLORS["BLACK"])
         prompt_text = self.__small_font.render("Memorize the card positions!", True, Config.COLORS["BLACK"])

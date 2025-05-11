@@ -44,7 +44,7 @@ class Config:
     RAHU = [
             {"surface": pygame.image.load("asset/RAHU/15.png"), "pos": "TOP LEFT"},
             {"surface": pygame.image.load("asset/RAHU/16.png"), "pos": "MIDDLE LEFT"},
-            {"surface": pygame.image.load("asset/RAHU/17.png"), "pos": "BOTOM LEFT"},
+            {"surface": pygame.image.load("asset/RAHU/17.png"), "pos": "BOTTOM LEFT"},
             {"surface": pygame.image.load("asset/RAHU/18.png"), "pos": "TOP RIGHT"},
             {"surface": pygame.image.load("asset/RAHU/19.png"), "pos": "MIDDLE RIGHT"},
             {"surface": pygame.image.load("asset/RAHU/20.png"), "pos": "BOTOM RIGHT"},

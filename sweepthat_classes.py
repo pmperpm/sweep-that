@@ -266,47 +266,6 @@ class Sound:
     @correct_index.setter
     def correct_index(self, value):
         self.__correct_index = value
-
-class Asset:
-    def __init__(self) -> None:
-        self.__start_time = 0
-        self.__total_time = 0
-        self.__is_counting = False
-        self.medium_font = pygame.font.Font(None, 36) 
-
-    def draw_countdown(self, screen, minutes):
-        """minute countdown """
-        # Initialize timer on first call
-        if not self.is_counting and minutes > 0:
-            self.__total_time = minutes * 60 * 1000  # minutes to milliseconds
-            self.__start_time = pygame.time.get_ticks()
-            self.__is_counting = True
-
-        # remaining time
-        elapsed_time = pygame.time.get_ticks() - self.__start_time
-        remaining_time = max(0, self.__total_time - elapsed_time)
-
-        # time format
-        minutes_remaining = remaining_time // 60000
-        seconds_remaining = (remaining_time // 1000) % 60
-        time_text = f"{minutes_remaining:02d}:{seconds_remaining:02d}"
-
-        # Draw text
-        time_surface = self.__medium_font.render(time_text, True, Config.COLORS["BLACK"])
-        text_rect = time_surface.get_rect(center=(Config.WIDTH//2, Config.HEIGHT//2-50))
-        screen.blit(time_surface, text_rect)
-
-        # Draw progress bar
-        if self.__total_time > 0:
-            progress_width = (elapsed_time / self.__total_time) * 200
-            pygame.draw.rect(screen, Config.COLORS["BLACK"], 
-                           (Config.WIDTH//2-100, Config.HEIGHT//2+20, progress_width, 20))
-
-        # completion
-        if remaining_time <= 0 and self.__is_counting:
-            self.__is_counting = False
-            return True
-        return False
     
 class User:
     def __init__(self) -> None:
@@ -404,7 +363,6 @@ class PieceManager:
         self.__board.draw(screen)
 
     def get_selected_piece(self, pos):
-        """Returns index of clicked card if visible, None otherwise"""
         for i, card in enumerate(self.__board.cards):
             if card.rect.collidepoint(pos):
                 return i if card.visible else None

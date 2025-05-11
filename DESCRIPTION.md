@@ -75,8 +75,8 @@ Line graph : Compare the average time that the user sweeps in each round.
 Pie chart : Position of the correct card that users often overlook.
 
 8. 
----
-Graph Name | Feature Name | Graph Object | Graph Type | X-axis | Y-axis |
+| Graph Name | Feature Name | Description | Graph Type | X-axis | Y-axis |
+|------------|--------------|-------------|------------|--------|--------|
 Frequency of correct result in hard mode compare to normal mode | rahu_pos, result | Comparison of success rates between modes. | Histogram | Rahu_pos (hard mode and normal mode) | Frequency | 
 Top 9 Longest time used to click a card. | Clicked_idx , react_time, result | To see which card user uses the longest time to click. | Heatmap  | -  | - | 
 Most Incorrect Click Position | result, cor_pos | To see which position users usually overlook. | Pie chart | -  | - | 
@@ -87,7 +87,8 @@ Card that user doesn’t click correctly | Cor_idx, click_idx | To see how much 
 
 9. 
 ---
-Feature Name | What can this data be used for? Why is it good to have this data? | How will you obtain 50 values of this feature data? | Which variable and which class will you collect this from? | How will you display this feature data (via summarization statistics or via graph)? | 
+| Feature Name | What can this data be used for? Why is it good to have this data? | How will you obtain 50 values of this feature data? | Which variable and which class will you collect this from? | How will you display this feature data (via summarization statistics or via graph)? |
+|--------------|---------|-------------------|-----------------------|----------------------|
 Date - Start time | The date - start time will be stored to be the primary key so we can know what's happening in the round since we collect the data as soon as the user clicks the card and we also have a lot of rounds until the user or the computer can click 18 cards. | By playing the game until the data is enough to calculate. | Collect from self.start_datetime in Game class | It will display along with the average time that users use to click the card and the time that users use to memorize the card. | 
 Time users use to click the card. | The time that the player uses to find the right card and click it can be used to analyse if they are faster or slower or if the user can’t remember the poem or the position so they use a lot more time than the other card. | By playing the game until the data is enough to calculate. | Collect from self.time_round in User class | The data will be represented in a line graph to compare all the time that the user uses. | 
 Index of the correct card. | The index of the correct card to compare with the index of the clicked card  to see if the user clicks the incorrect card, does it have the similar first words? Or if it has a similar sound? | By playing the game until the data is enough to calculate. | Collect from self.piece_manager.sound.correct_index in PieceManager class | The index will be used to find the poem and compare it to the poem of the clicked card. | 

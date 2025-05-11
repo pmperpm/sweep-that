@@ -7,11 +7,52 @@ sweep that! Karuta Thai style that will make you have fun with thai poem eventho
 ## Required Libraries and Tools
 - **Python** (version 3.x)
 - **Pygame** (version 2.x)
+- **Pandas** (version2.1.4)
+- **Matplotlib** (version3.8.2)
+- **tk** (version 0.1.0)
+note : all of the required libraries and tools will be in requirements.txt to install
 
-## How to play?
-- run main.py
+## Installation
+1. Clone the Repository
+```git clone https://github.com/pmperpm/sweep-that.git```
+```cd sweep-that```
+2. Set up Environment (recommended)
+```python -m venv venv```
+or 
+```python3 -m venv venv ```
+-- On Window
+```venv\Scripts\activate```
+-- On Linux / macOS
+```source venv/bin/activate```
+3. Install requirement
+```pip install -r requirements.txt```
+4. Start the game
+```python main.py```
+or 
+```python3 main.py```
 
-## Game Rules
-- You will be given 36 poem cards in total. After the game starts, the random poem sound will be played. You need to clicked the same poem card as the sound that is currently play. If you click the correct card 18 times (score = 18). 
-- Our sweep that game have 2 level < Normal and Hard >
-- 
+## How to play sweep that!
+- You will be given **36 poem cards** in total
+- Choose your Challenge.
+  1. Normal mode: use your pure memory against the clock!
+  2. Hard mode: Features Rahu (ราหู), a mythical serpent that devours random position of the board. The Rahu will appear on the screen in the random position to block some card!
+- Memorization Phase.
+  1. 3 mins : Perfect for returning players
+  2. 5 mins : Recommended for first-timers
+  3. SKIP : For memory masters who love a real challenge!
+When the times is up! press **Enter** to begin
+- Game Play
+  1. Listen carefully to the reading poem.
+  2. Quickly find the matching one in the board and **sweep** it!
+  3. Each correct match will increase your score.
+- Winning or Losing
+  1. If your score reach 18, then you are the winner
+  2. If the opponent (computer) score is 18 before you, then you lose. Better luck next time!
+- Stats to help you improve yourself
+  1. **Stats** page will analyze your behavior and make you a pro player!
+  **Note** : The Number of Cards in the stats page is in the *Card & Poem* page, such as :
+  *'I'm always can't get the poem of card number 18 right, but what is the poem in card 18?'*
+  - You can go to the **Card & Poem** to find out what is the poem is card number 18!
+
+# Tip
+  - Go to **Card & Poem** to listen to the poem in the game and familiarize yourself with all the cards!

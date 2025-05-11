@@ -28,7 +28,7 @@
 
     **UML**
     <p align="center">
-        <img src="asset/umlfinalsweep.drawio.png" alt="UML">
+        <img src="UML.png" alt="UML">
     </p>
 
 

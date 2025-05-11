@@ -13,23 +13,23 @@ sweep that! Karuta Thai style that will make you have fun with thai poem eventho
 note : all of the required libraries and tools will be in requirements.txt to install
 
 ## Installation
-1. Clone the Repository
-```git clone https://github.com/pmperpm/sweep-that.git```
-```cd sweep-that```
-2. Set up Environment (recommended)
-```python -m venv venv```
-or 
-```python3 -m venv venv ```
--- On Window
-```venv\Scripts\activate```
--- On Linux / macOS
-```source venv/bin/activate```
-3. Install requirement
-```pip install -r requirements.txt```
-4. Start the game
-```python main.py```
-or 
-```python3 main.py```
+1. Clone the Repository<br>
+```git clone https://github.com/pmperpm/sweep-that.git```<br>
+```cd sweep-that```<br>
+2. Set up Environment (recommended)<br>
+```python -m venv venv```<br>
+or <br>
+```python3 -m venv venv ```<br>
+-- On Window<br>
+```venv\Scripts\activate```<br>
+-- On Linux / macOS<br>
+```source venv/bin/activate```<br>
+3. Install requirement<br>
+```pip install -r requirements.txt```<br>
+4. Start the game<br>
+```python main.py```<br>
+or <br>
+```python3 main.py```<br>
 
 ## How to play sweep that!
 - You will be given **36 poem cards** in total
@@ -49,9 +49,9 @@ When the times is up! press **Enter** to begin
   1. If your score reach 18, then you are the winner
   2. If the opponent (computer) score is 18 before you, then you lose. Better luck next time!
 - Stats to help you improve yourself
-  1. **Stats** page will analyze your behavior and make you a pro player!
-  **Note** : The Number of Cards in the stats page is in the *Card & Poem* page, such as :
-  *'I'm always can't get the poem of card number 18 right, but what is the poem in card 18?'*
+  1. **Stats** page will analyze your behavior and make you a pro player!<br>
+  **Note** : The Number of Cards in the stats page is in the *Card & Poem* page, such as :<br>
+  *'I'm always can't get the poem of card number 18 right, but what is the poem in card 18?'*<br>
   - You can go to the **Card & Poem** to find out what is the poem is card number 18!
 
 # Tip

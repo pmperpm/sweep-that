@@ -55,4 +55,5 @@ When the times is up! press **Enter** to begin
   - You can go to the **Card & Poem** to find out what is the poem is card number 18!
 
 # Tip
+  - In the Menu page or when you Win or Lose, **PLEASE** click on the text, not the box.
   - Go to **Card & Poem** to listen to the poem in the game and familiarize yourself with all the cards!

@@ -1,4 +1,8 @@
-matplotlip==3.10.1
-pygame==2.6.1
-pandas==2.2.3
-numpy==2.2.4
+pygame==2.5.2
+pandas==2.1.4
+numpy==1.26.2
+matplotlib==3.8.2
+seaborn==0.13.0
+python-dateutil==2.8.2
+Pillow==10.1.0
+tk==0.1.0
